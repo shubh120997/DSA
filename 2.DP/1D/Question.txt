@@ -1,0 +1,203 @@
+2001. Climbing Stars
+https://leetcode.com/problems/climbing-stairs/description/
+
+
+2002. Frog Jump || EASY 
+//Remeber you are standing on the first step, so can't jump to 2 directly
+https://www.geeksforgeeks.org/problems/geek-jump/1
+
+2003. Frog Jump with k distances 
+https://www.geeksforgeeks.org/problems/minimal-cost/1
+
+2004. Maximum sum of non-adjacent elements 
+https://leetcode.com/problems/house-robber/description/
+
+2005. House Robber 
+
+>>>>>> 2D/3D DP and DP on Grids: <<<<<<<
+
+// Could be performed with n * n 
+// Prefill the initiall row and column
+
+2006. Ninja's Training 
+https://www.geeksforgeeks.org/problems/geeks-training/1
+
+2007. Grid Unique Paths : DP on Grids 
+https://leetcode.com/problems/unique-paths/submissions/1452555011/
+
+2008. Grid Unique Paths 2 
+https://leetcode.com/problems/unique-paths-ii/description/
+
+2009. Minimum path sum in Grid 
+https://leetcode.com/problems/minimum-path-sum/
+
+2010. Minimum path sum in Triangular Grid || EASY
+https://leetcode.com/problems/triangle/
+
+2011. Minimum/Maximum Falling Path Sum || EASY
+https://leetcode.com/problems/minimum-falling-path-sum/
+
+2012. Ninja and his friends
+
+>>>>> DP on Subsequence <<<<<<
+//Based on Knapsack
+
+2013. Subset sum equal to target || EASY || *
+//make sure of the pre assignment of dp array
+//Base condition start from 0,0
+https://www.geeksforgeeks.org/problems/subset-sum-problem-1611555638/1
+
+2014. Partition Equal Subset Sum || EASY || *
+//Base condition start from 0,0
+https://leetcode.com/problems/partition-equal-subset-sum/
+
+2015. Partition Set Into 2 Subsets With Min Absolute Sum Diff
+https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/
+
+2016. Count Subsets with Sum K
+https://www.geeksforgeeks.org/problems/perfect-sum-problem5633/1
+
+2017. Count Partitions with Given Difference
+https://www.geeksforgeeks.org/problems/partitions-with-given-difference/1
+
+2018. Assign Cookies || EASY || Greedy
+https://leetcode.com/problems/assign-cookies/
+
+2019. Minimum Coins || EASY || *
+//Base condition start from 0, 0 ways to achieve 0 target
+https://leetcode.com/problems/coin-change/description/
+
+2020. Target Sum 
+https://leetcode.com/problems/target-sum/
+
+2021. Coin Change 2 || EASY || *
+//Think of how does the solution works
+https://leetcode.com/problems/coin-change-ii/description/
+
+2022. Unbounded Knapsack || EASY
+https://www.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1
+
+2023. Rod Cutting Problem || EASY
+https://www.geeksforgeeks.org/problems/rod-cutting0840/1
+
+
+>>>>>>>> DP on Strings <<<<<<<<<
+//Recursion feels good
+
+2024. Longest Common Subsequence || EASY || Pending
+//Pending Shorter code are present too
+//Iterative and recursive both easy
+https://leetcode.com/problems/longest-common-subsequence/
+
+2025. Print ALL Longest Common Subsequence
+https://www.geeksforgeeks.org/problems/print-all-lcs-sequences3413/1
+
+2026. Longest Common Substring || EASY
+https://www.geeksforgeeks.org/problems/longest-common-substring1452/1
+
+2027. Longest Palindromic Subsequence || EASY
+https://leetcode.com/problems/longest-palindromic-subsequence/description/
+
+2028. Minimum insertions to make string Palindrome || EASY
+https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/description/
+
+2029. Minimum Insertions/Deletions to Convert String || EASY
+https://leetcode.com/problems/delete-operation-for-two-strings/description/
+
+2030. Shortest Common Supersequence || MEDIUM
+//Visualization is hard
+https://leetcode.com/problems/shortest-common-supersequence/
+
+2031. Distinct Subsequence
+https://leetcode.com/problems/distinct-subsequences/
+
+2032. Edit Distance
+https://leetcode.com/problems/edit-distance/description/
+
+2033. Wildcard Matching
+https://leetcode.com/problems/wildcard-matching/
+
+
+>>>>>>> DP on Stocks <<<<<<<<
+// subtrack the fees on 1 step
+// Try Tabulation for these question *********
+
+
+2034. Best Time to Buy and Sell Stock || EASY
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/
+
+2035. Buy and Sell Stock - II || EASY || *
+//Explore the Iterative Approch
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
+
+2036. Buy and Sell Stocks III || EASY
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/
+
+2037. Buy and Stock Sell IV || EASY || *
+//Explore the Iterative Approch
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/
+
+2038. Buy and Sell Stocks With Cooldown || EASY || ***
+//Use 3d DP or use index+1
+//Explore if your could use index +1 , with more cooldown value
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
+
+2039. Buy and Sell Stocks With Transaction Fee || EASY 
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/
+
+
+>>>>>>>> DP on LIS <<<<<<<<<
+
+2040. Longest Increasing Subsequence 
+https://leetcode.com/problems/longest-increasing-subsequence/description/
+
+2041. Printing Longest Increasing Subsequence
+https://www.geeksforgeeks.org/problems/printing-longest-increasing-subsequence/1
+
+2042. Longest Increasing Subsequence 
+https://www.geeksforgeeks.org/problems/longest-increasing-subsequence-1587115620/1
+
+2043. Largest Divisible Subset
+https://leetcode.com/problems/largest-divisible-subset/
+
+2044. Longest String Chain
+https://leetcode.com/problems/longest-string-chain/
+
+2045. Longest Bitonic Subsequence 
+https://www.geeksforgeeks.org/problems/longest-bitonic-subsequence0824/1
+
+2046. Number of Longest Increasing Subsequences
+https://leetcode.com/problems/number-of-longest-increasing-subsequence/
+
+
+> MCM DP
+
+2047. Matrix Chain Multiplication
+https://www.geeksforgeeks.org/problems/matrix-chain-multiplication0303/1
+
+2048. Matrix Chain Multiplication | Bottom-Up
+https://www.geeksforgeeks.org/problems/matrix-chain-multiplication0303/1
+
+2049. Minimum Cost to Cut the Stick
+https://leetcode.com/problems/minimum-cost-to-cut-a-stick/description/
+
+2050. Burst Balloons
+https://leetcode.com/problems/burst-balloons/
+
+2051. Evaluate Boolean Expression to True
+https://leetcode.com/problems/parsing-a-boolean-expression/
+
+2052. Palindrome Partitioning - II
+https://leetcode.com/problems/palindrome-partitioning-ii/
+
+2053. Partition Array for Maximum Sum
+https://leetcode.com/problems/partition-array-for-maximum-sum/description/
+
+
+>DP on Squares
+
+2054. Maximum Rectangle Area with all 1's
+https://leetcode.com/problems/maximal-rectangle/description/
+
+2055. Count Square Submatrices with All Ones
+https://leetcode.com/problems/count-square-submatrices-with-all-ones/description/
