@@ -4,19 +4,28 @@
 
 ## ⚡ Quick Revision
 
-| # | Problem | Trigger | Approach in one line | T |
-|---|---|---|---|---|
-| 4001 | Assign Cookies | maximise matches between two sorted needs | sort both, two pointers, cookie always moves and child moves only on a feed | O(n log n) |
-| 4003 | Shortest Job First | minimise *average* wait | sort bursts ascending, running prefix sum of waits, divide by n | O(n log n) |
-| 4004 | Jump Game I | reachability, not path | sweep tracking farthest reach, fail the moment `i > farthest` | O(n) |
-| 4006 | Job Sequencing | pick best subset + place it | sort by profit desc, put each job in the latest free slot before its deadline | O(n log n + n·maxD) |
-| 4007 | Max Meetings in One Room | most non-overlapping intervals | sort by end time, take any meeting starting after the last one ended | O(n log n) |
-| 4008 | Non-overlapping Intervals | fewest deletions to remove overlap | same as 4007 — maximise keeps by end time, answer is `n - kept` | O(n log n) |
-| 4009 | Insert Interval | sorted list, one insertion | three loops — emit before, widen while touching, emit after | O(n) |
-| 4010 | Minimum Platforms | peak concurrency | sort arrivals and departures separately, sweep, track max occupancy | O(n log n) |
-| 4011 | Valid Parenthesis String | wildcard, exponential branching | carry `[low, high]` range of open counts, clamp low at 0, end at `low == 0` | O(n) |
-| 4012 | Candy | each element constrained by both neighbours | two sweeps, left then right, merge with `max` | O(n) |
-| 4013 | Fractional Knapsack | scarce capacity, divisible items | sort by value/weight desc, take whole items then one fraction | O(n log n) |
+- **4001 · Assign Cookies** &nbsp;·&nbsp; `O(n log n)`<br>
+  *maximise matches between two sorted needs* → sort both, two pointers, cookie always moves and child moves only on a feed
+- **4003 · Shortest Job First** &nbsp;·&nbsp; `O(n log n)`<br>
+  *minimise the average wait* → sort bursts ascending, running prefix sum of waits, divide by n
+- **4004 · Jump Game I** &nbsp;·&nbsp; `O(n)`<br>
+  *reachability, not path* → sweep tracking farthest reach, fail the moment `i > farthest`
+- **4006 · Job Sequencing** &nbsp;·&nbsp; `O(n log n + n·maxD)`<br>
+  *pick best subset + place it* → sort by profit desc, put each job in the latest free slot before its deadline
+- **4007 · Max Meetings in One Room** &nbsp;·&nbsp; `O(n log n)`<br>
+  *most non-overlapping intervals* → sort by end time, take any meeting starting after the last one ended
+- **4008 · Non-overlapping Intervals** &nbsp;·&nbsp; `O(n log n)`<br>
+  *fewest deletions to remove overlap* → same as 4007 — maximise keeps by end time, answer is `n - kept`
+- **4009 · Insert Interval** &nbsp;·&nbsp; `O(n)`<br>
+  *sorted list, one insertion* → three loops — emit before, widen while touching, emit after
+- **4010 · Minimum Platforms** &nbsp;·&nbsp; `O(n log n)`<br>
+  *peak concurrency* → sort arrivals and departures separately, sweep, track max occupancy
+- **4011 · Valid Parenthesis String** &nbsp;·&nbsp; `O(n)`<br>
+  *wildcard, exponential branching* → carry `[low, high]` range of open counts, clamp low at 0, end at `low == 0`
+- **4012 · Candy** &nbsp;·&nbsp; `O(n)`<br>
+  *each element constrained by both neighbours* → two sweeps, left then right, merge with `max`
+- **4013 · Fractional Knapsack** &nbsp;·&nbsp; `O(n log n)`<br>
+  *scarce capacity, divisible items* → sort by value/weight desc, take whole items then one fraction
 
 Read a row → can you write the code? Yes, skip. No, open the question below.
 
@@ -73,8 +82,10 @@ s = [1, 1]           i=1 g=2 | j=1 s=1  ->  SKIP   i=1 j=2
 ```java
 for (int greed : g) {
     int best = -1;
-    for (int j = 0; j < s.length; j++)                       // smallest unused cookie that fits
-        if (!used[j] && s[j] >= greed && (best == -1 || s[j] < s[best])) best = j;
+    // smallest unused cookie that fits
+    for (int j = 0; j < s.length; j++)
+        if (!used[j] && s[j] >= greed
+                && (best == -1 || s[j] < s[best])) best = j;
     if (best != -1) { used[best] = true; count++; }
 }
 ```
@@ -92,10 +103,13 @@ class Solution {
         Arrays.sort(g);
         Arrays.sort(s);
 
-        int i = 0, j = 0;                       // i = child, j = cookie
+        // i = child, j = cookie
+        int i = 0, j = 0;
         while (i < g.length && j < s.length) {
-            if (s[j] >= g[i]) i++;              // fed -> next child
-            j++;                                // cookie spent either way
+            // fed -> next child
+            if (s[j] >= g[i]) i++;
+            // cookie spent either way
+            j++;
         }
         return i;
     }
@@ -162,7 +176,8 @@ static int solve(int bt[]) {
     Arrays.sort(bt);
     int wait = 0, total = 0;
     for (int b : bt) {
-        total += wait;      // BEFORE — you don't wait on yourself
+        // BEFORE — you don't wait on yourself
+        total += wait;
         wait  += b;
     }
     return total / bt.length;
@@ -178,7 +193,8 @@ static int solve(int bt[]) {
 static int solve(int bt[]) {
     Arrays.sort(bt);
     int n = bt.length, total = 0;
-    for (int i = 0; i < n; i++) total += bt[i] * (n - 1 - i);   // burst paid by everyone after it
+    // burst paid by everyone after it
+    for (int i = 0; i < n; i++) total += bt[i] * (n - 1 - i);
     return total / n;
 }
 ```
@@ -248,10 +264,12 @@ Backward variant: hold the leftmost index known to reach the end, walk right-to-
 public boolean canJump(int[] nums) {
     int farthest = 0;
     for (int i = 0; i < nums.length; i++) {
-        if (i > farthest) return false;                  // wall — can't even stand here
+        // wall — can't even stand here
+        if (i > farthest) return false;
         farthest = Math.max(farthest, i + nums[i]);
     }
-    return true;                                         // survived the sweep
+    // survived the sweep
+    return true;
 }
 ```
 
@@ -264,7 +282,8 @@ public boolean canJump(int[] nums) {
 public boolean canJump(int[] nums) {
     int goal = nums.length - 1;
     for (int i = nums.length - 2; i >= 0; i--)
-        if (i + nums[i] >= goal) goal = i;               // i can reach goal -> i is the new goal
+        // i can reach goal -> i is the new goal
+        if (i + nums[i] >= goal) goal = i;
     return goal == 0;
 }
 ```
@@ -333,16 +352,21 @@ count = 2, profit = 60
 ```java
 // jobs[i] = {deadline, profit}
 static int[] jobSequencing(int[][] jobs) {
-    Arrays.sort(jobs, (a, b) -> b[1] - a[1]);            // profit DESC
+    // profit DESC
+    Arrays.sort(jobs, (a, b) -> b[1] - a[1]);
 
     int maxD = 0;
     for (int[] j : jobs) maxD = Math.max(maxD, j[0]);
-    boolean[] slot = new boolean[maxD + 1];              // slot[0] unused — 1-indexed
+    // slot[0] unused — 1-indexed
+    boolean[] slot = new boolean[maxD + 1];
 
     int count = 0, profit = 0;
     for (int[] j : jobs)
-        for (int t = j[0]; t >= 1; t--)                  // LATEST free slot first
-            if (!slot[t]) { slot[t] = true; count++; profit += j[1]; break; }
+        // LATEST free slot first
+        for (int t = j[0]; t >= 1; t--)
+            if (!slot[t]) {
+                slot[t] = true; count++; profit += j[1]; break;
+            }
 
     return new int[]{count, profit};
 }
@@ -424,15 +448,18 @@ Why earliest-finish wins: whichever meeting you take, the only thing that matter
 
 ```java
 static ArrayList<Integer> maxMeetings(int n, int start[], int end[]) {
-    int[][] m = new int[n][3];                       // {end, start, index}
+    // {end, start, index}
+    int[][] m = new int[n][3];
     for (int i = 0; i < n; i++) m[i] = new int[]{end[i], start[i], i + 1};
 
-    Arrays.sort(m, (a, b) -> a[0] != b[0] ? a[0] - b[0] : a[2] - b[2]);   // end ASC, then index
+    // end ASC, then index
+    Arrays.sort(m, (a, b) -> a[0] != b[0] ? a[0] - b[0] : a[2] - b[2]);
 
     ArrayList<Integer> ans = new ArrayList<>();
     int lastEnd = -1;
     for (int[] mt : m)
-        if (mt[1] > lastEnd) { ans.add(mt[2]); lastEnd = mt[0]; }         // strictly greater
+        // strictly greater
+        if (mt[1] > lastEnd) { ans.add(mt[2]); lastEnd = mt[0]; }
 
     Collections.sort(ans);
     return ans;
@@ -510,11 +537,13 @@ public int eraseOverlapIntervals(int[][] intervals) {
     return intervals.length - solve(intervals, 0, -1);
 }
 
-private int solve(int[][] iv, int i, int prev) {          // max intervals KEPT
+// max intervals KEPT
+private int solve(int[][] iv, int i, int prev) {
     if (i == iv.length) return 0;
     int skip = solve(iv, i + 1, prev);
     int take = 0;
-    if (prev == -1 || iv[i][0] >= iv[prev][1]) take = 1 + solve(iv, i + 1, i);
+    if (prev == -1 || iv[i][0] >= iv[prev][1])
+        take = 1 + solve(iv, i + 1, i);
     return Math.max(take, skip);
 }
 ```
@@ -532,12 +561,14 @@ public int eraseOverlapIntervals(int[][] intervals) {
     if (n == 0) return 0;
     Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
 
-    int[] dp = new int[n];                                // dp[i] = best chain ending at i
+    // dp[i] = best chain ending at i
+    int[] dp = new int[n];
     Arrays.fill(dp, 1);
     int best = 1;
     for (int i = 1; i < n; i++) {
         for (int j = 0; j < i; j++)
-            if (intervals[j][1] <= intervals[i][0]) dp[i] = Math.max(dp[i], dp[j] + 1);
+            if (intervals[j][1] <= intervals[i][0])
+                dp[i] = Math.max(dp[i], dp[j] + 1);
         best = Math.max(best, dp[i]);
     }
     return n - best;
@@ -553,11 +584,13 @@ Literally Longest Increasing Subsequence with "non-overlapping" as the compariso
 
 ```java
 public int eraseOverlapIntervals(int[][] intervals) {
-    Arrays.sort(intervals, (a, b) -> Integer.compare(a[1], b[1]));   // end ASC
+    // end ASC
+    Arrays.sort(intervals, (a, b) -> Integer.compare(a[1], b[1]));
 
     int kept = 0, lastEnd = Integer.MIN_VALUE;
     for (int[] it : intervals)
-        if (it[0] >= lastEnd) { kept++; lastEnd = it[1]; }           // >= : touching is OK
+        // >= : touching is OK
+        if (it[0] >= lastEnd) { kept++; lastEnd = it[1]; }
 
     return intervals.length - kept;
 }
@@ -637,8 +670,11 @@ public int[][] insert(int[][] intervals, int[] newInterval) {
     List<int[]> res = new ArrayList<>();
     for (int[] it : all) {
         int[] last = res.isEmpty() ? null : res.get(res.size() - 1);
-        if (last != null && it[0] <= last[1]) last[1] = Math.max(last[1], it[1]);   // overlap -> widen
-        else res.add(new int[]{it[0], it[1]});                                       // copy, don't alias
+        // overlap -> widen
+        if (last != null && it[0] <= last[1])
+            last[1] = Math.max(last[1], it[1]);
+        // copy, don't alias
+        else res.add(new int[]{it[0], it[1]});
     }
     return res.toArray(new int[0][]);
 }
@@ -656,10 +692,13 @@ public int[][] insert(int[][] intervals, int[] newInterval) {
     List<int[]> res = new ArrayList<>();
     int i = 0, n = intervals.length;
 
-    while (i < n && intervals[i][1] < newInterval[0]) res.add(intervals[i++]);   // strictly before
+    // strictly before
+    while (i < n && intervals[i][1] < newInterval[0])
+        res.add(intervals[i++]);
 
     int s = newInterval[0], e = newInterval[1];
-    while (i < n && intervals[i][0] <= e) {                                      // touching merges
+    // touching merges
+    while (i < n && intervals[i][0] <= e) {
         s = Math.min(s, intervals[i][0]);
         e = Math.max(e, intervals[i][1]);
         i++;
@@ -743,9 +782,11 @@ Forget trains, watch the clock. Sweeping through time, every arrival adds one oc
 static int findPlatform(int arr[], int dep[]) {
     int n = arr.length, max = 0;
     for (int i = 0; i < n; i++) {
-        int count = 1;                                     // train i itself
+        // train i itself
+        int count = 1;
         for (int j = 0; j < n; j++)
-            if (j != i && arr[j] <= arr[i] && dep[j] >= arr[i]) count++;   // j still on a platform
+            // j still on a platform
+            if (j != i && arr[j] <= arr[i] && dep[j] >= arr[i]) count++;
         max = Math.max(max, count);
     }
     return max;
@@ -762,11 +803,13 @@ The peak can only happen **at some arrival**, so checking every arrival instant 
 ```java
 static int findPlatform(int arr[], int dep[]) {
     Arrays.sort(arr);
-    Arrays.sort(dep);                                  // pairing is intentionally broken
+    // pairing is intentionally broken
+    Arrays.sort(dep);
 
     int i = 0, j = 0, cur = 0, max = 0, n = arr.length;
     while (i < n) {
-        if (arr[i] <= dep[j]) { cur++; i++; max = Math.max(max, cur); }   // <= : touch needs a platform
+        // <= : touch needs a platform
+        if (arr[i] <= dep[j]) { cur++; i++; max = Math.max(max, cur); }
         else                  { cur--; j++; }
     }
     return max;
@@ -780,13 +823,18 @@ static int findPlatform(int arr[], int dep[]) {
 
 ```java
 static int findPlatform(int arr[], int dep[]) {
-    int[] diff = new int[2405];                        // times are HHMM, max 2359
+    // times are HHMM, max 2359
+    int[] diff = new int[2405];
     for (int i = 0; i < arr.length; i++) {
         diff[arr[i]]++;
-        diff[dep[i] + 1]--;                            // +1 : still occupied at the departure minute
+        // +1 : still occupied at the departure minute
+        diff[dep[i] + 1]--;
     }
     int cur = 0, max = 0;
-    for (int t = 0; t < diff.length; t++) { cur += diff[t]; max = Math.max(max, cur); }
+    for (int t = 0; t < diff.length; t++) {
+        cur += diff[t];
+        max = Math.max(max, cur);
+    }
     return max;
 }
 ```
@@ -864,15 +912,19 @@ Every `*` forks the string into three futures, so brute force is `3^n`. But thos
 public boolean checkValidString(String s) { return solve(s, 0, 0); }
 
 private boolean solve(String s, int i, int open) {
-    if (open < 0) return false;                       // prune: already impossible
+    // prune: already impossible
+    if (open < 0) return false;
     if (i == s.length()) return open == 0;
 
     char c = s.charAt(i);
     if (c == '(') return solve(s, i + 1, open + 1);
     if (c == ')') return solve(s, i + 1, open - 1);
-    return solve(s, i + 1, open + 1)                  // '*' as '('
-        || solve(s, i + 1, open - 1)                  // '*' as ')'
-        || solve(s, i + 1, open);                     // '*' as empty
+    // '*' as '('
+    return solve(s, i + 1, open + 1)
+        // '*' as ')'
+        || solve(s, i + 1, open - 1)
+        // '*' as empty
+        || solve(s, i + 1, open);
 }
 ```
 
@@ -924,7 +976,8 @@ public boolean checkValidString(String s) {
         }
     }
     while (!open.isEmpty() && !star.isEmpty()) {
-        if (open.peek() > star.peek()) return false;      // '*' sits LEFT of '(' — cannot close it
+        // '*' sits LEFT of '(' — cannot close it
+        if (open.peek() > star.peek()) return false;
         open.pop();
         star.pop();
     }
@@ -941,15 +994,19 @@ Store **indices, not counts** — the leftover `*` must appear *after* the lefto
 
 ```java
 public boolean checkValidString(String s) {
-    int low = 0, high = 0;                       // possible open-bracket range
+    // possible open-bracket range
+    int low = 0, high = 0;
 
     for (char c : s.toCharArray()) {
         if      (c == '(') { low++; high++; }
         else if (c == ')') { low--; high--; }
-        else               { low--; high++; }    // '*' widens both ways
+        // '*' widens both ways
+        else               { low--; high++; }
 
-        if (high < 0) return false;              // unfixable, stop now
-        low = Math.max(low, 0);                  // never fewer than zero opens
+        // unfixable, stop now
+        if (high < 0) return false;
+        // never fewer than zero opens
+        low = Math.max(low, 0);
     }
     return low == 0;
 }
@@ -1035,7 +1092,8 @@ public int candy(int[] ratings) {
         if (ratings[i] > ratings[i + 1]) right[i] = right[i + 1] + 1;
 
     int sum = 0;
-    for (int i = 0; i < n; i++) sum += Math.max(left[i], right[i]);   // satisfy both rules
+    // satisfy both rules
+    for (int i = 0; i < n; i++) sum += Math.max(left[i], right[i]);
     return sum;
 }
 ```
@@ -1053,11 +1111,15 @@ public int candy(int[] ratings) {
     int[] c = new int[n];
     Arrays.fill(c, 1);
 
-    for (int i = 1; i < n; i++)                                  // left neighbour rule
+    // left neighbour rule
+    for (int i = 1; i < n; i++)
         if (ratings[i] > ratings[i - 1]) c[i] = c[i - 1] + 1;
 
-    for (int i = n - 2; i >= 0; i--)                             // right neighbour rule
-        if (ratings[i] > ratings[i + 1]) c[i] = Math.max(c[i], c[i + 1] + 1);   // max, NOT assign
+    // right neighbour rule
+    for (int i = n - 2; i >= 0; i--)
+        // max, NOT assign
+        if (ratings[i] > ratings[i + 1])
+            c[i] = Math.max(c[i], c[i + 1] + 1);
 
     int sum = 0;
     for (int x : c) sum += x;
@@ -1075,15 +1137,23 @@ public int candy(int[] ratings) {
     int n = ratings.length, sum = 1, i = 1;
 
     while (i < n) {
-        if (ratings[i] == ratings[i - 1]) { sum += 1; i++; continue; }   // tie resets to 1
+        // tie resets to 1
+        if (ratings[i] == ratings[i - 1]) { sum += 1; i++; continue; }
 
-        int peak = 1;                                                    // climb
-        while (i < n && ratings[i] > ratings[i - 1]) { peak++; sum += peak; i++; }
+        // climb
+        int peak = 1;
+        while (i < n && ratings[i] > ratings[i - 1]) {
+            peak++; sum += peak; i++;
+        }
 
-        int down = 1;                                                    // descent
-        while (i < n && ratings[i] < ratings[i - 1]) { sum += down; down++; i++; }
+        // descent
+        int down = 1;
+        while (i < n && ratings[i] < ratings[i - 1]) {
+            sum += down; down++; i++;
+        }
 
-        if (down > peak) sum += down - peak;    // valley longer than the climb -> raise the peak
+        // valley longer than the climb -> raise the peak
+        if (down > peak) sum += down - peak;
     }
     return sum;
 }
@@ -1176,15 +1246,19 @@ static double fractionalKnapsack(int[] val, int[] wt, int capacity) {
     for (int i = 0; i < n; i++) idx[i] = i;
 
     // ratio DESC — Double.compare, never (int)(r2 - r1)
-    Arrays.sort(idx, (a, b) -> Double.compare((double) val[b] / wt[b], (double) val[a] / wt[a]));
+    Arrays.sort(idx, (a, b) -> Double.compare(
+            (double) val[b] / wt[b],
+            (double) val[a] / wt[a]));
 
     double total = 0;
     int remaining = capacity;
     for (int i : idx) {
-        if (wt[i] <= remaining) {                        // whole item
+        // whole item
+        if (wt[i] <= remaining) {
             total += val[i];
             remaining -= wt[i];
-        } else {                                         // fraction, then done
+        // fraction, then done
+        } else {
             total += (double) val[i] * remaining / wt[i];
             break;
         }
