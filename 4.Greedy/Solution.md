@@ -1,32 +1,32 @@
-📋 [Questions.md](./Questions.md)
+📋 [Questions.md](./Questions.md) — *practice list only; every link is also below*
 
 <details>
 <summary><b>⚡ Quick Revision — all 11 in one screen</b></summary>
 
-- **4001 · Assign Cookies** &nbsp;·&nbsp; `O(n log n)`<br>
+- **4001 · Assign Cookies** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](https://leetcode.com/problems/assign-cookies/)<br>
   *maximise matches between two sorted needs* → sort both, two pointers, cookie always moves and child moves only on a feed
-- **4003 · Shortest Job First** &nbsp;·&nbsp; `O(n log n)`<br>
+- **4003 · Shortest Job First** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](https://www.geeksforgeeks.org/problems/shortest-job-first/1)<br>
   *minimise the average wait* → sort bursts ascending, running prefix sum of waits, divide by n
-- **4004 · Jump Game I** &nbsp;·&nbsp; `O(n)`<br>
+- **4004 · Jump Game I** &nbsp;·&nbsp; `O(n)` &nbsp;·&nbsp; [🔗](https://leetcode.com/problems/jump-game/description/)<br>
   *reachability, not path* → sweep tracking farthest reach, fail the moment `i > farthest`
-- **4006 · Job Sequencing** &nbsp;·&nbsp; `O(n log n + n·maxD)`<br>
+- **4006 · Job Sequencing** &nbsp;·&nbsp; `O(n log n + n·maxD)` &nbsp;·&nbsp; [🔗](https://www.geeksforgeeks.org/problems/job-sequencing-problem-1587115620/1)<br>
   *pick best subset + place it* → sort by profit desc, put each job in the latest free slot before its deadline
-- **4007 · Max Meetings in One Room** &nbsp;·&nbsp; `O(n log n)`<br>
+- **4007 · Max Meetings in One Room** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](http://geeksforgeeks.org/problems/maximum-meetings-in-one-room/1)<br>
   *most non-overlapping intervals* → sort by end time, take any meeting starting after the last one ended
-- **4008 · Non-overlapping Intervals** &nbsp;·&nbsp; `O(n log n)`<br>
+- **4008 · Non-overlapping Intervals** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](https://leetcode.com/problems/non-overlapping-intervals/description/)<br>
   *fewest deletions to remove overlap* → same as 4007 — maximise keeps by end time, answer is `n - kept`
-- **4009 · Insert Interval** &nbsp;·&nbsp; `O(n)`<br>
+- **4009 · Insert Interval** &nbsp;·&nbsp; `O(n)` &nbsp;·&nbsp; [🔗](https://leetcode.com/problems/insert-interval/description/)<br>
   *sorted list, one insertion* → three loops — emit before, widen while touching, emit after
-- **4010 · Minimum Platforms** &nbsp;·&nbsp; `O(n log n)`<br>
+- **4010 · Minimum Platforms** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](https://www.geeksforgeeks.org/problems/minimum-platforms-1587115620/1)<br>
   *peak concurrency* → sort arrivals and departures separately, sweep, track max occupancy
-- **4011 · Valid Parenthesis String** &nbsp;·&nbsp; `O(n)`<br>
+- **4011 · Valid Parenthesis String** &nbsp;·&nbsp; `O(n)` &nbsp;·&nbsp; [🔗](https://leetcode.com/problems/valid-parenthesis-string/description/)<br>
   *wildcard, exponential branching* → carry `[low, high]` range of open counts, clamp low at 0, end at `low == 0`
-- **4012 · Candy** &nbsp;·&nbsp; `O(n)`<br>
+- **4012 · Candy** &nbsp;·&nbsp; `O(n)` &nbsp;·&nbsp; [🔗](https://leetcode.com/problems/candy/description/)<br>
   *each element constrained by both neighbours* → two sweeps, left then right, merge with `max`
-- **4013 · Fractional Knapsack** &nbsp;·&nbsp; `O(n log n)`<br>
+- **4013 · Fractional Knapsack** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](https://www.geeksforgeeks.org/problems/fractional-knapsack-1587115620/1)<br>
   *scarce capacity, divisible items* → sort by value/weight desc, take whole items then one fraction
 
-<sub>Read a line → can you write the code? Yes, skip. No, open that question below.</sub>
+<sub>Read a line → can you write the code? Yes, skip. No, open that question below. 🔗 goes straight to the judge — no need to leave this file.</sub>
 
 </details>
 
