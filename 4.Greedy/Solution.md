@@ -1,8 +1,7 @@
-<style>h3{margin-bottom:0}h3+p{margin-top:0}</style>
-
 📋 [Questions.md](./Questions.md)
 
-## ⚡ Quick Revision
+<details>
+<summary><b>⚡ Quick Revision — all 11 in one screen</b></summary>
 
 - **4001 · Assign Cookies** &nbsp;·&nbsp; `O(n log n)`<br>
   *maximise matches between two sorted needs* → sort both, two pointers, cookie always moves and child moves only on a feed
@@ -27,15 +26,20 @@
 - **4013 · Fractional Knapsack** &nbsp;·&nbsp; `O(n log n)`<br>
   *scarce capacity, divisible items* → sort by value/weight desc, take whole items then one fraction
 
-Read a row → can you write the code? Yes, skip. No, open the question below.
+<sub>Read a line → can you write the code? Yes, skip. No, open that question below.</sub>
+
+</details>
 
 ---
 
-### 4001: Assign Cookies
-https://leetcode.com/problems/assign-cookies/
+<details name="greedy">
+<summary><b>4001 · Assign Cookies</b></summary>
+
+🔗 https://leetcode.com/problems/assign-cookies/
+
 Each child needs a cookie of size ≥ its greed; maximise children fed.
 
-<details name="q4001">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -47,7 +51,7 @@ Each child needs a cookie of size ≥ its greed; maximise children fed.
 
 </details>
 
-<details name="q4001">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -67,7 +71,7 @@ j exhausted -> answer 1
 
 </details>
 
-<details name="q4001">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Sort both arrays ascending.
@@ -78,7 +82,7 @@ j exhausted -> answer 1
 
 </details>
 
-<details name="q4001">
+<details>
 <summary><b>👨‍💻 Code 1 — Brute Force</b> &nbsp; T: O(n·m) &nbsp; S: O(m)</summary>
 
 ```java
@@ -96,7 +100,7 @@ Rescans every cookie per child. Sorting removes the rescan.
 
 </details>
 
-<details name="q4001">
+<details>
 <summary><b>👨‍💻 Code 2 — Sort + Two Pointers</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
 
 ```java
@@ -120,13 +124,18 @@ class Solution {
 
 </details>
 
+</details>
+
 ---
 
-### 4003: Shortest Job First(SJF)
-https://www.geeksforgeeks.org/problems/shortest-job-first/1
+<details name="greedy">
+<summary><b>4003 · Shortest Job First(SJF)</b></summary>
+
+🔗 https://www.geeksforgeeks.org/problems/shortest-job-first/1
+
 All processes arrive at time 0; return the **average waiting time** (floor).
 
-<details name="q4003">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -139,7 +148,7 @@ All processes arrive at time 0; return the **average waiting time** (floor).
 
 </details>
 
-<details name="q4003">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -158,7 +167,7 @@ total = 20  ->  20 / 5 = 4
 
 </details>
 
-<details name="q4003">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Sort burst times ascending.
@@ -170,7 +179,7 @@ Why ascending: `bt[i]` is paid by the `n-1-i` jobs behind it — small numbers d
 
 </details>
 
-<details name="q4003">
+<details>
 <summary><b>👨‍💻 Code 1 — Sort + Running Wait</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
 
 ```java
@@ -188,7 +197,7 @@ static int solve(int bt[]) {
 
 </details>
 
-<details name="q4003">
+<details>
 <summary><b>👨‍💻 Code 2 — Sort + Weighted Sum</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
 
 ```java
@@ -205,13 +214,18 @@ Same answer, states the "small numbers get the big multiplier" idea directly. Wa
 
 </details>
 
+</details>
+
 ---
 
-### 4004: Jump Game I
-https://leetcode.com/problems/jump-game/
+<details name="greedy">
+<summary><b>4004 · Jump Game I</b></summary>
+
+🔗 https://leetcode.com/problems/jump-game/
+
 `nums[i]` is the **max** jump length from `i` — can you reach the last index?
 
-<details name="q4004">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -225,7 +239,7 @@ https://leetcode.com/problems/jump-game/
 
 </details>
 
-<details name="q4004">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -248,7 +262,7 @@ f  3  3  3  3
 
 </details>
 
-<details name="q4004">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Track the farthest index reachable so far.
@@ -261,7 +275,7 @@ Backward variant: hold the leftmost index known to reach the end, walk right-to-
 
 </details>
 
-<details name="q4004">
+<details>
 <summary><b>👨‍💻 Code 1 — Forward Greedy (farthest reach)</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
 
 ```java
@@ -279,7 +293,7 @@ public boolean canJump(int[] nums) {
 
 </details>
 
-<details name="q4004">
+<details>
 <summary><b>👨‍💻 Code 2 — Backward Greedy (shrinking goal)</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
 
 ```java
@@ -294,13 +308,18 @@ public boolean canJump(int[] nums) {
 
 </details>
 
+</details>
+
 ---
 
-### 4006: Job Sequencing Problem
-https://www.geeksforgeeks.org/problems/job-sequencing-problem-1587115620/1
+<details name="greedy">
+<summary><b>4006 · Job Sequencing Problem</b></summary>
+
+🔗 https://www.geeksforgeeks.org/problems/job-sequencing-problem-1587115620/1
+
 Each job takes 1 unit of time and must finish by its deadline; maximise total profit.
 
-<details name="q4006">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -314,7 +333,7 @@ Each job takes 1 unit of time and must finish by its deadline; maximise total pr
 
 </details>
 
-<details name="q4006">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -339,7 +358,7 @@ count = 2, profit = 60
 
 </details>
 
-<details name="q4006">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Create Job objects (deadline, profit).
@@ -351,7 +370,7 @@ count = 2, profit = 60
 
 </details>
 
-<details name="q4006">
+<details>
 <summary><b>👨‍💻 Code 1 — Sort + Backward Slot Scan</b> &nbsp; T: O(n log n + n·maxD) &nbsp; S: O(maxD)</summary>
 
 ```java
@@ -379,7 +398,7 @@ static int[] jobSequencing(int[][] jobs) {
 
 </details>
 
-<details name="q4006">
+<details>
 <summary><b>👨‍💻 Code 2 — DSU</b> &nbsp; T: O(n log n) &nbsp; S: O(maxD) &nbsp; ⏳ not studied yet</summary>
 
 Deliberately left unwritten — see Remarks. Same sort, same greedy; only the "find latest free slot ≤ d" step is replaced by a Disjoint Set Union `find` with path compression, so the inner `for t--` loop disappears.
@@ -388,13 +407,18 @@ Write this section once DSU is covered.
 
 </details>
 
+</details>
+
 ---
 
-### 4007: Maximum Meetings in One Room
-http://geeksforgeeks.org/problems/maximum-meetings-in-one-room/1
+<details name="greedy">
+<summary><b>4007 · Maximum Meetings in One Room</b></summary>
+
+🔗 http://geeksforgeeks.org/problems/maximum-meetings-in-one-room/1
+
 One room, N meetings `(start, end)` — attend the most meetings and report which ones.
 
-<details name="q4007">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -409,7 +433,7 @@ One room, N meetings `(start, end)` — attend the most meetings and report whic
 
 </details>
 
-<details name="q4007">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -439,7 +463,7 @@ sorted by end:
 
 </details>
 
-<details name="q4007">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Create Meeting objects carrying `start`, `end` and the original 1-based position.
@@ -451,7 +475,7 @@ Why earliest-finish wins: whichever meeting you take, the only thing that matter
 
 </details>
 
-<details name="q4007">
+<details>
 <summary><b>👨‍💻 Code 1 — Sort by End + Greedy Pick</b> &nbsp; T: O(n log n) &nbsp; S: O(n)</summary>
 
 ```java
@@ -481,13 +505,18 @@ static ArrayList<Integer> maxMeetings(int n, int start[], int end[]) {
 
 </details>
 
+</details>
+
 ---
 
-### 4008: Non-overlapping Intervals
-https://leetcode.com/problems/non-overlapping-intervals/
+<details name="greedy">
+<summary><b>4008 · Non-overlapping Intervals</b></summary>
+
+🔗 https://leetcode.com/problems/non-overlapping-intervals/
+
 Remove the fewest intervals so none of the rest overlap.
 
-<details name="q4008">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -500,7 +529,7 @@ Remove the fewest intervals so none of the rest overlap.
 
 </details>
 
-<details name="q4008">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -532,7 +561,7 @@ by end  : keep [2,3],[4,5]  -> 1 removal ✅
 
 </details>
 
-<details name="q4008">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Sort intervals by end time ascending.
@@ -544,7 +573,7 @@ Fewest removals and most keeps are the same question asked backwards, and "most 
 
 </details>
 
-<details name="q4008">
+<details>
 <summary><b>👨‍💻 Code 1 — Brute Force (keep or remove)</b> &nbsp; T: O(2ⁿ) &nbsp; S: O(n)</summary>
 
 ```java
@@ -569,7 +598,7 @@ Every interval is kept or dropped — the full `2ⁿ` decision tree.
 
 </details>
 
-<details name="q4008">
+<details>
 <summary><b>👨‍💻 Code 2 — DP (longest compatible chain)</b> &nbsp; T: O(n²) &nbsp; S: O(n)</summary>
 
 ```java
@@ -597,7 +626,7 @@ Literally Longest Increasing Subsequence with "non-overlapping" as the compariso
 
 </details>
 
-<details name="q4008">
+<details>
 <summary><b>👨‍💻 Code 3 — Sort by End + Count Keeps</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
 
 ```java
@@ -619,13 +648,18 @@ public int eraseOverlapIntervals(int[][] intervals) {
 
 </details>
 
+</details>
+
 ---
 
-### 4009: Insert Interval
-https://leetcode.com/problems/insert-interval/
+<details name="greedy">
+<summary><b>4009 · Insert Interval</b></summary>
+
+🔗 https://leetcode.com/problems/insert-interval/
+
 Insert one interval into an already-sorted non-overlapping list, merging what it touches.
 
-<details name="q4009">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -639,7 +673,7 @@ Insert one interval into an already-sorted non-overlapping list, merging what it
 
 </details>
 
-<details name="q4009">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -666,7 +700,7 @@ result = [1,2] [3,10] [12,16]
 
 </details>
 
-<details name="q4009">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Emit every interval that ends strictly before the new one starts — untouched.
@@ -678,7 +712,7 @@ Sorted input means everything that overlaps the new interval is one contiguous b
 
 </details>
 
-<details name="q4009">
+<details>
 <summary><b>👨‍💻 Code 1 — Append, Sort, Merge All</b> &nbsp; T: O(n log n) &nbsp; S: O(n)</summary>
 
 ```java
@@ -705,7 +739,7 @@ Throws away the fact that the input is already sorted, and pays `O(n log n)` to 
 
 </details>
 
-<details name="q4009">
+<details>
 <summary><b>👨‍💻 Code 2 — Three-Phase Linear Scan</b> &nbsp; T: O(n) &nbsp; S: O(n)</summary>
 
 ```java
@@ -734,13 +768,18 @@ public int[][] insert(int[][] intervals, int[] newInterval) {
 
 </details>
 
+</details>
+
 ---
 
-### 4010: Minimum Platforms
-https://www.geeksforgeeks.org/problems/minimum-platforms-1587115620/1
+<details name="greedy">
+<summary><b>4010 · Minimum Platforms</b></summary>
+
+🔗 https://www.geeksforgeeks.org/problems/minimum-platforms-1587115620/1
+
 Fewest railway platforms so no train ever waits.
 
-<details name="q4010">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -754,7 +793,7 @@ Fewest railway platforms so no train ever waits.
 
 </details>
 
-<details name="q4010">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -782,7 +821,7 @@ answer = 3
 
 </details>
 
-<details name="q4010">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Sort arrivals and departures as two independent sorted lists.
@@ -794,7 +833,7 @@ Forget trains, watch the clock. Sweeping through time, every arrival adds one oc
 
 </details>
 
-<details name="q4010">
+<details>
 <summary><b>👨‍💻 Code 1 — Brute Force (count overlaps per train)</b> &nbsp; T: O(n²) &nbsp; S: O(1)</summary>
 
 ```java
@@ -817,7 +856,7 @@ The peak can only happen **at some arrival**, so checking every arrival instant 
 
 </details>
 
-<details name="q4010">
+<details>
 <summary><b>👨‍💻 Code 2 — Sort Both + Two-Pointer Sweep</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
 
 ```java
@@ -842,7 +881,7 @@ static int findPlatform(int arr[], int dep[]) {
 
 </details>
 
-<details name="q4010">
+<details>
 <summary><b>👨‍💻 Code 3 — Difference Array (no sort)</b> &nbsp; T: O(n + T) &nbsp; S: O(T)</summary>
 
 ```java
@@ -867,13 +906,18 @@ Beats the sort when `n` is large, but only because the clock is bounded. Useless
 
 </details>
 
+</details>
+
 ---
 
-### 4011: Valid Parenthesis String
-https://leetcode.com/problems/valid-parenthesis-string/
+<details name="greedy">
+<summary><b>4011 · Valid Parenthesis String</b></summary>
+
+🔗 https://leetcode.com/problems/valid-parenthesis-string/
+
 `*` is a wildcard for `(`, `)` or empty — can the string be made valid?
 
-<details name="q4011">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -887,7 +931,7 @@ https://leetcode.com/problems/valid-parenthesis-string/
 
 </details>
 
-<details name="q4011">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -915,7 +959,7 @@ low == 0  ->  true ✅
 
 </details>
 
-<details name="q4011">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Keep two counters — `low` (fewest opens still possible) and `high` (most opens still possible).
@@ -928,7 +972,7 @@ Every `*` forks the string into three futures, so brute force is `3^n`. But thos
 
 </details>
 
-<details name="q4011">
+<details>
 <summary><b>👨‍💻 Code 1 — Brute Force (try all three)</b> &nbsp; T: O(3ⁿ) &nbsp; S: O(n)</summary>
 
 ```java
@@ -955,7 +999,7 @@ private boolean solve(String s, int i, int open) {
 
 </details>
 
-<details name="q4011">
+<details>
 <summary><b>👨‍💻 Code 2 — Memoization</b> &nbsp; T: O(n²) &nbsp; S: O(n²)</summary>
 
 ```java
@@ -984,7 +1028,7 @@ State is `(index, open)` — `open` never exceeds `n`, so the table is `n × (n+
 
 </details>
 
-<details name="q4011">
+<details>
 <summary><b>👨‍💻 Code 3 — Two Stacks (indices)</b> &nbsp; T: O(n) &nbsp; S: O(n)</summary>
 
 ```java
@@ -1016,7 +1060,7 @@ Store **indices, not counts** — the leftover `*` must appear *after* the lefto
 
 </details>
 
-<details name="q4011">
+<details>
 <summary><b>👨‍💻 Code 4 — Two-Counter Range Sweep</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
 
 ```java
@@ -1041,13 +1085,18 @@ public boolean checkValidString(String s) {
 
 </details>
 
+</details>
+
 ---
 
-### 4012: Candy
-https://leetcode.com/problems/candy/
+<details name="greedy">
+<summary><b>4012 · Candy</b></summary>
+
+🔗 https://leetcode.com/problems/candy/
+
 Every child gets ≥1 candy, and a higher-rated child gets more than each neighbour — minimise the total.
 
-<details name="q4012">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -1061,7 +1110,7 @@ Every child gets ≥1 candy, and a higher-rated child gets more than each neighb
 
 </details>
 
-<details name="q4012">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -1087,7 +1136,7 @@ total = 13
 
 </details>
 
-<details name="q4012">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Give every child 1 candy.
@@ -1099,7 +1148,7 @@ Each child has two independent obligations, and no single direction can see both
 
 </details>
 
-<details name="q4012">
+<details>
 <summary><b>👨‍💻 Code 1 — Two Separate Arrays</b> &nbsp; T: O(n) &nbsp; S: O(2n)</summary>
 
 ```java
@@ -1128,7 +1177,7 @@ Clearest version — each rule owns its array, `max` merges them at the end. Cod
 
 </details>
 
-<details name="q4012">
+<details>
 <summary><b>👨‍💻 Code 2 — Two-Pass Sweep (one array)</b> &nbsp; T: O(n) &nbsp; S: O(n)</summary>
 
 ```java
@@ -1155,7 +1204,7 @@ public int candy(int[] ratings) {
 
 </details>
 
-<details name="q4012">
+<details>
 <summary><b>👨‍💻 Code 3 — Slope Counting (constant space)</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
 
 ```java
@@ -1193,13 +1242,18 @@ Fiddly and rarely required. Know Code 2 cold; keep this one as the "can you do O
 
 </details>
 
+</details>
+
 ---
 
-### 4013: Fractional Knapsack
-https://www.geeksforgeeks.org/problems/fractional-knapsack-1587115620/1
+<details name="greedy">
+<summary><b>4013 · Fractional Knapsack</b></summary>
+
+🔗 https://www.geeksforgeeks.org/problems/fractional-knapsack-1587115620/1
+
 Fill a bag of capacity `W` for maximum value — items may be broken into fractions.
 
-<details name="q4013">
+<details>
 <summary><b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
@@ -1214,7 +1268,7 @@ Fill a bag of capacity `W` for maximum value — items may be broken into fracti
 
 </details>
 
-<details name="q4013">
+<details>
 <summary><b>🌳 Examples</b></summary>
 
 ```
@@ -1250,7 +1304,7 @@ whole item (7,6) = 7 was better ✅
 
 </details>
 
-<details name="q4013">
+<details>
 <summary><b>💡 Intuition</b></summary>
 
 1. Compute each item's value-per-unit-weight.
@@ -1262,7 +1316,7 @@ Capacity is the scarce resource, so buy the densest value per kilo first. Fracti
 
 </details>
 
-<details name="q4013">
+<details>
 <summary><b>👨‍💻 Code 1 — Sort by Ratio + Fill</b> &nbsp; T: O(n log n) &nbsp; S: O(n)</summary>
 
 ```java
@@ -1295,7 +1349,7 @@ static double fractionalKnapsack(int[] val, int[] wt, int capacity) {
 
 </details>
 
-<details name="q4013">
+<details>
 <summary><b>👨‍💻 Why there is no second approach</b></summary>
 
 There is no meaningful brute force here. "Try every subset" is the **0/1** problem, and 0/1 is a different problem with a different answer — it cannot be fractional knapsack's brute force.
@@ -1303,6 +1357,8 @@ There is no meaningful brute force here. "Try every subset" is the **0/1** probl
 The only variation is mechanical: a max-heap keyed on ratio instead of a sort. Same `O(n log n)`, same greedy, more code. Not worth learning as a separate approach.
 
 The approach ladder you actually want here is the **contrast**: fractional → greedy, 0/1 → DP. Know why the greedy fails the moment items stop being divisible.
+
+</details>
 
 </details>
 
