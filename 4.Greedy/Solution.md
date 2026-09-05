@@ -51,9 +51,11 @@ Each child needs a cookie of size ≥ its greed; maximise children fed.
 <summary><b>🌳 Examples</b></summary>
 
 ```
-g = [1, 2, 3]        i=0 g=1 | j=0 s=1  ->  FEED   i=1 j=1
-s = [1, 1]           i=1 g=2 | j=1 s=1  ->  SKIP   i=1 j=2
-                     j exhausted -> 1
+g = [1, 2, 3]   s = [1, 1]
+
+i=0 g=1 | j=0 s=1 -> FEED  i=1 j=1
+i=1 g=2 | j=1 s=1 -> SKIP  i=1 j=2
+j exhausted -> answer 1
 ```
 
 | Input | Output |
@@ -141,18 +143,18 @@ All processes arrive at time 0; return the **average waiting time** (floor).
 <summary><b>🌳 Examples</b></summary>
 
 ```
-bt = [4, 3, 7, 1, 2]  ->  sorted [1, 2, 3, 4, 7]
+bt = [4,3,7,1,2] -> sorted [1,2,3,4,7]
 
-process   1   2   3   4   7
-wait      0   1   3   6  10        total = 20   ->  20 / 5 = 4
+job    1   2   3   4   7
+wait   0   1   3   6  10
+
+total = 20  ->  20 / 5 = 4
 ```
 
-| Input | Output |
-|---|---|
-| `[4,3,7,1,2]` | `4` |
-| `[1]` | `0` (nobody waits) |
-| `[5,5,5]` | `5` — `(0+5+10)/3` |
-| `[1,2,3]` | `1` — `(0+1+3)/3 = 4/3 = 1` (floor) |
+- **`[4,3,7,1,2]`** — `4`
+- **`[1]`** — `0` (nobody waits)
+- **`[5,5,5]`** — `5` — `(0+5+10)/3`
+- **`[1,2,3]`** — `1` — `(0+1+3)/3 = 4/3 = 1` (floor)
 
 </details>
 
@@ -227,20 +229,22 @@ https://leetcode.com/problems/jump-game/
 <summary><b>🌳 Examples</b></summary>
 
 ```
-nums = [2, 3, 1, 1, 4]        nums = [3, 2, 1, 0, 4]
+nums = [2, 3, 1, 1, 4]
+i  0  1  2  3  4
+f  2  4  4  4  4
+-> 4 >= 4   reachable  ✅
 
-i  0  1  2  3  4              i  0  1  2  3
-f  2  4  4  4  4              f  3  3  3  3   -> i=4 > f=3  STUCK
-   4 >= 4  ✅ true                             ❌ false
+nums = [3, 2, 1, 0, 4]
+i  0  1  2  3
+f  3  3  3  3
+-> i=4 > f=3   STUCK   ❌
 ```
 
-| Input | Output |
-|---|---|
-| `[2,3,1,1,4]` | `true` |
-| `[3,2,1,0,4]` | `false` — the `0` at index 3 can't be jumped over |
-| `[0]` | `true` — already at the last index |
-| `[0,1]` | `false` |
-| `[3,0,0,0]` | `true` — index 0 jumps clear over every zero |
+- **`[2,3,1,1,4]`** — `true`
+- **`[3,2,1,0,4]`** — `false` — the `0` at index 3 can't be jumped over
+- **`[0]`** — `true` — already at the last index
+- **`[0,1]`** — `false`
+- **`[3,0,0,0]`** — `true` — index 0 jumps clear over every zero
 
 </details>
 
@@ -314,23 +318,24 @@ Each job takes 1 unit of time and must finish by its deadline; maximise total pr
 <summary><b>🌳 Examples</b></summary>
 
 ```
-jobs (id, deadline, profit) = (1,4,20) (2,1,10) (3,1,40) (4,1,30)
-sorted by profit desc       =  40/d1    30/d1    20/d4    10/d1
+jobs (id, deadline, profit)
+ (1,4,20) (2,1,10) (3,1,40) (4,1,30)
 
-40 -> slot 1 free          [40][ ][ ][ ]   ✅
-30 -> d1, slot 1 taken                      ❌ dropped
-20 -> slot 4 free          [40][ ][ ][20]  ✅
-10 -> d1, slot 1 taken                      ❌ dropped
+by profit desc:
+ 40/d1   30/d1   20/d4   10/d1
+
+40 -> slot 1 free    [40][ ][ ][ ]   ✅
+30 -> d1 slot taken                  ❌
+20 -> slot 4 free    [40][ ][ ][20]  ✅
+10 -> d1 slot taken                  ❌
 
 count = 2, profit = 60
 ```
 
-| Input (d, p) | Output |
-|---|---|
-| `(4,20) (1,10) (1,40) (1,30)` | `2  60` |
-| `(2,100) (1,19) (2,27) (1,25) (1,15)` | `2  127` |
-| all deadline `1` | `1  maxProfit` — only one slot exists |
-| deadlines ≥ n | `n  sumOfAll` — everything fits |
+- **`(4,20) (1,10) (1,40) (1,30)`** — `2  60`
+- **`(2,100) (1,19) (2,27) (1,25) (1,15)`** — `2  127`
+- **all deadline `1`** — `1  maxProfit` — only one slot exists
+- **deadlines ≥ n** — `n  sumOfAll` — everything fits
 
 </details>
 
@@ -408,26 +413,29 @@ One room, N meetings `(start, end)` — attend the most meetings and report whic
 <summary><b>🌳 Examples</b></summary>
 
 ```
-start = [1, 3, 0, 5, 8, 5]      meeting #  1  2  3  4  5  6
-end   = [2, 4, 6, 7, 9, 9]      end        2  4  6  7  9  9
+meeting #   1  2  3  4  5  6
+start       1  3  0  5  8  5
+end         2  4  6  7  9  9
 
-sorted by end -> #1(1,2) #2(3,4) #3(0,6) #4(5,7) #5(8,9) #6(5,9)
+sorted by end:
+ #1(1,2) #2(3,4) #3(0,6)
+ #4(5,7) #5(8,9) #6(5,9)
 
 #1  1 > -1  ✅  last=2
 #2  3 >  2  ✅  last=4
 #3  0 >  4  ❌
 #4  5 >  4  ✅  last=7
 #5  8 >  7  ✅  last=9
-#6  5 >  9  ❌            ->  4 meetings:  1 2 4 5
+#6  5 >  9  ❌
+
+4 meetings ->  1 2 4 5
 ```
 
-| Input | Output |
-|---|---|
-| above | `1 2 4 5` |
-| `start=[10,12,20]`, `end=[20,25,30]` | `1 3` — #2 overlaps #1 |
-| one meeting | that meeting |
-| all identical times | `1` — only one fits |
-| `end` of A `==` `start` of B | B is **rejected** (strict `>`) |
+- **above** — `1 2 4 5`
+- **`start=[10,12,20]`, `end=[20,25,30]`** — `1 3` — #2 overlaps #1
+- **one meeting** — that meeting
+- **all identical times** — `1` — only one fits
+- **`end` of A `==` `start` of B** — B is **rejected** (strict `>`)
 
 </details>
 
@@ -450,16 +458,21 @@ Why earliest-finish wins: whichever meeting you take, the only thing that matter
 static ArrayList<Integer> maxMeetings(int n, int start[], int end[]) {
     // {end, start, index}
     int[][] m = new int[n][3];
-    for (int i = 0; i < n; i++) m[i] = new int[]{end[i], start[i], i + 1};
+    for (int i = 0; i < n; i++)
+        m[i] = new int[]{end[i], start[i], i + 1};
 
     // end ASC, then index
-    Arrays.sort(m, (a, b) -> a[0] != b[0] ? a[0] - b[0] : a[2] - b[2]);
+    Arrays.sort(m, (a, b) ->
+        a[0] != b[0] ? a[0] - b[0] : a[2] - b[2]);
 
     ArrayList<Integer> ans = new ArrayList<>();
     int lastEnd = -1;
     for (int[] mt : m)
         // strictly greater
-        if (mt[1] > lastEnd) { ans.add(mt[2]); lastEnd = mt[0]; }
+        if (mt[1] > lastEnd) {
+            ans.add(mt[2]);
+            lastEnd = mt[0];
+        }
 
     Collections.sort(ans);
     return ans;
@@ -491,28 +504,31 @@ Remove the fewest intervals so none of the rest overlap.
 <summary><b>🌳 Examples</b></summary>
 
 ```
-[[1,2],[2,3],[3,4],[1,3]]   sorted by end -> [1,2] [1,3] [2,3] [3,4]
+[[1,2],[2,3],[3,4],[1,3]]
+sorted by end:
+ [1,2] [1,3] [2,3] [3,4]
 
 [1,2]  1 >= MIN  ✅ keep  last=2
 [1,3]  1 >=  2   ❌
 [2,3]  2 >=  2   ✅ keep  last=3
 [3,4]  3 >=  3   ✅ keep  last=4
-                 kept = 3  ->  4 - 3 = 1 removal
+
+kept = 3  ->  4 - 3 = 1 removal
 ```
 
 Why sorting by start fails:
 
 ```
-[[1,100],[2,3],[4,5]]   by start -> keep [1,100], reject both  -> 2 removals
-                        by end   -> keep [2,3],[4,5]           -> 1 removal ✅
+[[1,100],[2,3],[4,5]]
+
+by start: keep [1,100]      -> 2 removals
+by end  : keep [2,3],[4,5]  -> 1 removal ✅
 ```
 
-| Input | Output |
-|---|---|
-| `[[1,2],[2,3],[3,4],[1,3]]` | `1` |
-| `[[1,2],[1,2],[1,2]]` | `2` |
-| `[[1,2],[2,3]]` | `0` — touching is fine |
-| single interval | `0` |
+- **`[[1,2],[2,3],[3,4],[1,3]]`** — `1`
+- **`[[1,2],[1,2],[1,2]]`** — `2`
+- **`[[1,2],[2,3]]`** — `0` — touching is fine
+- **single interval** — `0`
 
 </details>
 
@@ -533,7 +549,8 @@ Fewest removals and most keeps are the same question asked backwards, and "most 
 
 ```java
 public int eraseOverlapIntervals(int[][] intervals) {
-    Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+    Arrays.sort(intervals,
+            (a, b) -> Integer.compare(a[0], b[0]));
     return intervals.length - solve(intervals, 0, -1);
 }
 
@@ -559,7 +576,8 @@ Every interval is kept or dropped — the full `2ⁿ` decision tree.
 public int eraseOverlapIntervals(int[][] intervals) {
     int n = intervals.length;
     if (n == 0) return 0;
-    Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+    Arrays.sort(intervals,
+            (a, b) -> Integer.compare(a[0], b[0]));
 
     // dp[i] = best chain ending at i
     int[] dp = new int[n];
@@ -585,7 +603,8 @@ Literally Longest Increasing Subsequence with "non-overlapping" as the compariso
 ```java
 public int eraseOverlapIntervals(int[][] intervals) {
     // end ASC
-    Arrays.sort(intervals, (a, b) -> Integer.compare(a[1], b[1]));
+    Arrays.sort(intervals,
+            (a, b) -> Integer.compare(a[1], b[1]));
 
     int kept = 0, lastEnd = Integer.MIN_VALUE;
     for (int[] it : intervals)
@@ -624,25 +643,26 @@ Insert one interval into an already-sorted non-overlapping list, merging what it
 <summary><b>🌳 Examples</b></summary>
 
 ```
-intervals = [1,2] [3,5] [6,7] [8,10] [12,16]      new = [4,8]
+intervals:
+ [1,2] [3,5] [6,7] [8,10] [12,16]
+new = [4,8]
 
-phase 1  [1,2]   end 2 < 4        -> emit
-phase 2  [3,5]   start 3 <= 8     -> merge  s=3 e=8
-         [6,7]   start 6 <= 8     -> merge  s=3 e=8
-         [8,10]  start 8 <= 8     -> merge  s=3 e=10
-         [12,16] start 12 > 10    -> stop,  emit [3,10]
-phase 3  [12,16]                  -> emit
+ph1  [1,2]     end 2 < 4    -> emit
+ph2  [3,5]      3 <= 8  merge s=3 e=8
+     [6,7]      6 <= 8  merge s=3 e=8
+     [8,10]     8 <= 8  merge s=3 e=10
+     [12,16]   12 > 10  stop
+                        emit [3,10]
+ph3  [12,16]                -> emit
 
 result = [1,2] [3,10] [12,16]
 ```
 
-| Input | Output |
-|---|---|
-| `[[1,3],[6,9]]`, `new=[2,5]` | `[[1,5],[6,9]]` |
-| `[]`, `new=[5,7]` | `[[5,7]]` — all three loops skip |
-| `[[1,5]]`, `new=[2,3]` | `[[1,5]]` — new one is swallowed |
-| `[[1,5]]`, `new=[6,8]` | `[[1,5],[6,8]]` — appended at the end |
-| `[[3,5]]`, `new=[1,2]` | `[[1,2],[3,5]]` — inserted at the front |
+- **`[[1,3],[6,9]]`, `new=[2,5]`** — `[[1,5],[6,9]]`
+- **`[]`, `new=[5,7]`** — `[[5,7]]` — all three loops skip
+- **`[[1,5]]`, `new=[2,3]`** — `[[1,5]]` — new one is swallowed
+- **`[[1,5]]`, `new=[6,8]`** — `[[1,5],[6,8]]` — appended at the end
+- **`[[3,5]]`, `new=[1,2]`** — `[[1,2],[3,5]]` — inserted at the front
 
 </details>
 
@@ -669,7 +689,8 @@ public int[][] insert(int[][] intervals, int[] newInterval) {
 
     List<int[]> res = new ArrayList<>();
     for (int[] it : all) {
-        int[] last = res.isEmpty() ? null : res.get(res.size() - 1);
+        int[] last = res.isEmpty()
+                   ? null : res.get(res.size() - 1);
         // overlap -> widen
         if (last != null && it[0] <= last[1])
             last[1] = Math.max(last[1], it[1]);
@@ -737,14 +758,14 @@ Fewest railway platforms so no train ever waits.
 <summary><b>🌳 Examples</b></summary>
 
 ```
-arr = [900, 940, 950, 1100, 1500, 1800]
-dep = [910, 1200, 1120, 1130, 1900, 2000]     (already sorted)
+arr = [900, 940, 950,1100,1500,1800]
+dep = [910,1200,1120,1130,1900,2000]
 
  900 <= 910   arrive  cur=1  max=1
  940 <= 910?  no      depart cur=0
- 940 <= 1120  arrive  cur=1  max=1
+ 940 <= 1120  arrive  cur=1
  950 <= 1120  arrive  cur=2  max=2
-1100 <= 1120  arrive  cur=3  max=3   <-- peak
+1100 <= 1120  arrive  cur=3  max=3  <- peak
 1500 <= 1120? no      depart cur=2
 1500 <= 1130? no      depart cur=1
 1500 <= 1900  arrive  cur=2
@@ -753,13 +774,11 @@ dep = [910, 1200, 1120, 1130, 1900, 2000]     (already sorted)
 answer = 3
 ```
 
-| Input | Output |
-|---|---|
-| above | `3` |
-| `arr=[900]`, `dep=[910]` | `1` |
-| `arr=[900,910]`, `dep=[910,920]` | `2` — exact touch still needs a platform |
-| all trains disjoint in time | `1` |
-| all trains identical times | `n` |
+- **above** — `3`
+- **`arr=[900]`, `dep=[910]`** — `1`
+- **`arr=[900,910]`, `dep=[910,920]`** — `2` — exact touch still needs a platform
+- **all trains disjoint in time** — `1`
+- **all trains identical times** — `n`
 
 </details>
 
@@ -786,7 +805,8 @@ static int findPlatform(int arr[], int dep[]) {
         int count = 1;
         for (int j = 0; j < n; j++)
             // j still on a platform
-            if (j != i && arr[j] <= arr[i] && dep[j] >= arr[i]) count++;
+            if (j != i && arr[j] <= arr[i]
+                       && dep[j] >= arr[i]) count++;
         max = Math.max(max, count);
     }
     return max;
@@ -809,8 +829,12 @@ static int findPlatform(int arr[], int dep[]) {
     int i = 0, j = 0, cur = 0, max = 0, n = arr.length;
     while (i < n) {
         // <= : touch needs a platform
-        if (arr[i] <= dep[j]) { cur++; i++; max = Math.max(max, cur); }
-        else                  { cur--; j++; }
+        if (arr[i] <= dep[j]) {
+            cur++; i++;
+            max = Math.max(max, cur);
+        } else {
+            cur--; j++;
+        }
     }
     return max;
 }
@@ -869,26 +893,25 @@ https://leetcode.com/problems/valid-parenthesis-string/
 ```
 s = "(*))"
 
-char   low  high   note
- (      1    1
- *      0    2     low clamped from 0, high widened
- )     -1    1  -> low clamped to 0
- )     -1    0  -> low clamped to 0,  high == 0 still fine
-                   low == 0  ->  true ✅
+char   low  high
+  (     1    1
+  *     0    2    low clamped, high widens
+  )    -1    1    clamp low -> 0
+  )    -1    0    clamp low -> 0
 
-s = "(((" -> low 3, high 3 -> low != 0 -> false
-s = "))("  -> after two ')' high = -2 < 0 -> false early
+low == 0  ->  true ✅
+
+"((("  -> low 3, high 3 -> false
+"))("  -> high = -2 < 0 -> false early
 ```
 
-| Input | Output |
-|---|---|
-| `"()"` | `true` |
-| `"(*)"` | `true` |
-| `"(*))"` | `true` |
-| `"*)("` | `false` — order matters, counts alone are not enough |
-| `"("` | `false` |
-| `""` | `true` |
-| `"***"` | `true` — all empty |
+- **`"()"`** — `true`
+- **`"(*)"`** — `true`
+- **`"(*))"`** — `true`
+- **`"*)("`** — `false` — order matters, counts alone are not enough
+- **`"("`** — `false`
+- **`""`** — `true`
+- **`"***"`** — `true` — all empty
 
 </details>
 
@@ -909,7 +932,9 @@ Every `*` forks the string into three futures, so brute force is `3^n`. But thos
 <summary><b>👨‍💻 Code 1 — Brute Force (try all three)</b> &nbsp; T: O(3ⁿ) &nbsp; S: O(n)</summary>
 
 ```java
-public boolean checkValidString(String s) { return solve(s, 0, 0); }
+public boolean checkValidString(String s) {
+    return solve(s, 0, 0);
+}
 
 private boolean solve(String s, int i, int open) {
     // prune: already impossible
@@ -947,7 +972,8 @@ private boolean solve(String s, int i, int open, Boolean[][] memo) {
     boolean ok;
     if (c == '(')      ok = solve(s, i + 1, open + 1, memo);
     else if (c == ')') ok = solve(s, i + 1, open - 1, memo);
-    else ok = solve(s, i + 1, open + 1, memo) || solve(s, i + 1, open - 1, memo)
+    else ok = solve(s, i + 1, open + 1, memo)
+           || solve(s, i + 1, open - 1, memo)
            || solve(s, i + 1, open, memo);
 
     return memo[i][open] = ok;
@@ -963,7 +989,8 @@ State is `(index, open)` — `open` never exceeds `n`, so the table is `n × (n+
 
 ```java
 public boolean checkValidString(String s) {
-    Deque<Integer> open = new ArrayDeque<>(), star = new ArrayDeque<>();
+    Deque<Integer> open = new ArrayDeque<>();
+    Deque<Integer> star = new ArrayDeque<>();
 
     for (int i = 0; i < s.length(); i++) {
         char c = s.charAt(i);
@@ -1039,28 +1066,24 @@ Every child gets ≥1 candy, and a higher-rated child gets more than each neighb
 
 ```
 ratings = [1, 0, 2]
+init      1  1  1
+L -> R    1  1  2
+R <- L    2  1  2      total = 5
 
-init          1  1  1
-L -> R        1  1  2      (only 2 > 0 triggers)
-R <- L        2  1  2      (1 > 0 -> max(1, 1+1) = 2)
-                           total = 5
+ratings = [1,2,87,87,87,2,1]
+init      1 1 1 1 1 1 1
+L -> R    1 2 3 1 1 1 1   ties reset
+R <- L    1 2 3 1 3 2 1   max() keeps 3
 
-ratings = [1, 2, 87, 87, 87, 2, 1]
-
-init          1  1  1  1  1  1  1
-L -> R        1  2  3  1  1  1  1      ties reset to 1
-R <- L        1  2  3  1  3  2  1      max() protects the 3 at index 2
-                                       total = 13
+total = 13
 ```
 
-| Input | Output |
-|---|---|
-| `[1,0,2]` | `5` |
-| `[1,2,2]` | `4` — the tie gets just 1 |
-| `[1,2,3,4]` | `10` — one long climb |
-| `[4,3,2,1]` | `10` — the descent, caught only by pass 2 |
-| `[5]` | `1` |
-| `[3,3,3]` | `3` |
+- **`[1,0,2]`** — `5`
+- **`[1,2,2]`** — `4` — the tie gets just 1
+- **`[1,2,3,4]`** — `10` — one long climb
+- **`[4,3,2,1]`** — `10` — the descent, caught only by pass 2
+- **`[5]`** — `1`
+- **`[3,3,3]`** — `3`
 
 </details>
 
@@ -1087,13 +1110,16 @@ public int candy(int[] ratings) {
     Arrays.fill(right, 1);
 
     for (int i = 1; i < n; i++)
-        if (ratings[i] > ratings[i - 1]) left[i] = left[i - 1] + 1;
+        if (ratings[i] > ratings[i - 1])
+            left[i] = left[i - 1] + 1;
     for (int i = n - 2; i >= 0; i--)
-        if (ratings[i] > ratings[i + 1]) right[i] = right[i + 1] + 1;
+        if (ratings[i] > ratings[i + 1])
+            right[i] = right[i + 1] + 1;
 
     int sum = 0;
     // satisfy both rules
-    for (int i = 0; i < n; i++) sum += Math.max(left[i], right[i]);
+    for (int i = 0; i < n; i++)
+        sum += Math.max(left[i], right[i]);
     return sum;
 }
 ```
@@ -1138,7 +1164,9 @@ public int candy(int[] ratings) {
 
     while (i < n) {
         // tie resets to 1
-        if (ratings[i] == ratings[i - 1]) { sum += 1; i++; continue; }
+        if (ratings[i] == ratings[i - 1]) {
+            sum += 1; i++; continue;
+        }
 
         // climb
         int peak = 1;
@@ -1190,12 +1218,15 @@ Fill a bag of capacity `W` for maximum value — items may be broken into fracti
 <summary><b>🌳 Examples</b></summary>
 
 ```
-W = 50   items (value, weight) = (60,10) (100,20) (120,30)
-ratio                             6.0     5.0      4.0     (already sorted)
+W = 50
+items (value, weight):
+ (60,10)  (100,20)  (120,30)
+ratio  6.0    5.0      4.0
 
-(60,10)   fits whole    -> value 60    remaining 40
-(100,20)  fits whole    -> value 160   remaining 20
-(120,30)  too big       -> 120 * 20/30 = 80   -> value 240, break
+(60,10)   whole  -> 60    left 40
+(100,20)  whole  -> 160   left 20
+(120,30)  too big:
+   120 * 20/30 = 80  -> 240, break
 
 answer = 240.0
 ```
@@ -1203,24 +1234,19 @@ answer = 240.0
 Why greedy breaks for 0/1 (whole items only):
 
 ```
-W = 10   items (value, weight) = (60,10) (50,5) (50,5)
-ratio                             6.0     10.0   10.0
+W = 6   items (7,6) (5,4)
+ratio          1.17   1.25
 
-fractional : take both 5s (100) + half the 10 (30) = 130
-0/1 greedy : take both 5s = 100          0/1 best = 100  (here they agree)
-
-W = 6, items (7,6) (5,3) (5,3) ->  ratios 1.17, 1.67, 1.67
-0/1 greedy by ratio = 5 + 5 = 10 ✅   but with items (7,6) (5,4):
-ratio picks (5,4) = 5, leaving 2 unusable — the whole item (7,6) = 7 was better.
+ratio picks (5,4) = 5
+  -> leftover capacity 2 is unusable
+whole item (7,6) = 7 was better ✅
 ```
 
-| Input | Output |
-|---|---|
-| `W=50`, `(60,10)(100,20)(120,30)` | `240.0` |
-| `W=100`, everything fits | sum of all values |
-| `W=0` | `0.0` |
-| one item heavier than `W` | `value * W / weight` |
-| items with equal ratios | any order, same total |
+- **`W=50`, `(60,10)(100,20)(120,30)`** — `240.0`
+- **`W=100`, everything fits** — sum of all values
+- **`W=0`** — `0.0`
+- **one item heavier than `W`** — `value * W / weight`
+- **items with equal ratios** — any order, same total
 
 </details>
 
