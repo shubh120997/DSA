@@ -1,17 +1,18 @@
 📋 [Questions.md](./Questions.md) — *practice list only; every link is also below*
 
+<!-- #region ⚡ Quick Revision -->
 <details>
 <summary><b>⚡ Quick Revision — all 11 in one screen</b></summary>
 
 - **4001 · Assign Cookies** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](https://leetcode.com/problems/assign-cookies/)<br>
   *maximise matches between two sorted needs* → sort both, two pointers, cookie always moves and child moves only on a feed
-- **4003 · Shortest Job First** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](https://www.geeksforgeeks.org/problems/shortest-job-first/1)<br>
+- **4003 · Shortest Job First (SJF)** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](https://www.geeksforgeeks.org/problems/shortest-job-first/1)<br>
   *minimise the average wait* → sort bursts ascending, running prefix sum of waits, divide by n
 - **4004 · Jump Game I** &nbsp;·&nbsp; `O(n)` &nbsp;·&nbsp; [🔗](https://leetcode.com/problems/jump-game/description/)<br>
   *reachability, not path* → sweep tracking farthest reach, fail the moment `i > farthest`
-- **4006 · Job Sequencing** &nbsp;·&nbsp; `O(n log n + n·maxD)` &nbsp;·&nbsp; [🔗](https://www.geeksforgeeks.org/problems/job-sequencing-problem-1587115620/1)<br>
+- **4006 · Job Sequencing Problem** &nbsp;·&nbsp; `O(n log n + n·maxD)` &nbsp;·&nbsp; [🔗](https://www.geeksforgeeks.org/problems/job-sequencing-problem-1587115620/1)<br>
   *pick best subset + place it* → sort by profit desc, put each job in the latest free slot before its deadline
-- **4007 · Max Meetings in One Room** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](http://geeksforgeeks.org/problems/maximum-meetings-in-one-room/1)<br>
+- **4007 · Maximum Meetings in One Room** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](http://geeksforgeeks.org/problems/maximum-meetings-in-one-room/1)<br>
   *most non-overlapping intervals* → sort by end time, take any meeting starting after the last one ended
 - **4008 · Non-overlapping Intervals** &nbsp;·&nbsp; `O(n log n)` &nbsp;·&nbsp; [🔗](https://leetcode.com/problems/non-overlapping-intervals/description/)<br>
   *fewest deletions to remove overlap* → same as 4007 — maximise keeps by end time, answer is `n - kept`
@@ -31,16 +32,20 @@
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4001 · Assign Cookies -->
 <details name="greedy">
 <summary><b>4001 · Assign Cookies</b></summary>
+
+---
 
 🔗 https://leetcode.com/problems/assign-cookies/
 
 Each child needs a cookie of size ≥ its greed; maximise children fed.
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -52,27 +57,73 @@ Each child needs a cookie of size ≥ its greed; maximise children fed.
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
+
+**Trace** — skips and surplus, not just feeds:
 
 ```
-g = [1, 2, 3]   s = [1, 1]
+g = [1, 3, 5]   s = [2, 2, 4, 6]
 
-i=0 g=1 | j=0 s=1 -> FEED  i=1 j=1
-i=1 g=2 | j=1 s=1 -> SKIP  i=1 j=2
-j exhausted -> answer 1
+i=0 g=1 | j=0 s=2  2>=1  FEED  i=1 j=1
+i=1 g=3 | j=1 s=2  2<3   SKIP  i=1 j=2
+i=1 g=3 | j=2 s=4  4>=3  FEED  i=2 j=3
+i=2 g=5 | j=3 s=6  6>=5  FEED  i=3 j=4
+
+i = 3 -> all three fed
 ```
 
-| Input | Output |
-|---|---|
-| `g=[1,2,3]`, `s=[1,1]` | `1` |
-| `g=[2]`, `s=[2]` | `1` (exact fit) |
-| `g=[5]`, `s=[1,2,3]` | `0` |
-| either empty | `0` |
+**Why not "biggest cookie to the least greedy child?"**
+
+```
+g = [1, 5]   s = [2, 6]
+
+biggest-first:
+  6 -> child(1)  ✅
+  2 -> child(5)  2 < 5  ❌   = 1 fed
+
+smallest-fit:
+  2 -> child(1)  ✅
+  6 -> child(5)  ✅          = 2 fed
+```
+
+Spending a size-6 cookie on a child who needs 1 throws away the
+only cookie that could feed child 5.
+
+**Why sorting is not optional:**
+
+```
+g = [10, 1]   s = [1, 10]      (unsorted)
+
+two pointers on raw input:
+  g=10 | s=1   skip cookie
+  g=10 | s=10  FEED           = 1 fed ❌
+
+after sorting g=[1,10] s=[1,10]:
+  1>=1 FEED, 10>=10 FEED     = 2 fed ✅
+```
+
+**The pointer bug** — advancing `i` on a failed feed:
+
+```
+g = [2, 2]   s = [1, 2, 2]
+
+correct : s=1<2 skip
+          s=2 FEED, s=2 FEED     = 2 ✅
+i++ bug : s=1<2 but i++ anyway
+          child 1 abandoned      = 1 ❌
+```
+
+- **`g=[1,3,5]`, `s=[2,2,4,6]`** — `3` — surplus cookies are simply skipped
+- **`g=[1,5]`, `s=[2,6]`** — `2` — only smallest-fit gets both
+- **`g=[10,1]`, `s=[1,10]`** — `2` — wrong answer `1` if unsorted
+- **`g=[2,2]`, `s=[1,2,2]`** — `2` — catches the `i++` bug
+- **`g=[2]`, `s=[2]`** — `1` — exact fit counts, so `>=` not `>`
+- **`g=[5]`, `s=[1,2,3]`** — `0` — `j` runs off the end, loop guard matters
 
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Sort both arrays ascending.
 2. Two pointers — child `i`, cookie `j`.
@@ -83,16 +134,28 @@ j exhausted -> answer 1
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Brute Force</b> &nbsp; T: O(n·m) &nbsp; S: O(m)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Brute Force</b> &nbsp; T: O(n·m) &nbsp; S: O(m)</summary>
 
 ```java
-for (int greed : g) {
-    int best = -1;
-    // smallest unused cookie that fits
-    for (int j = 0; j < s.length; j++)
-        if (!used[j] && s[j] >= greed
-                && (best == -1 || s[j] < s[best])) best = j;
-    if (best != -1) { used[best] = true; count++; }
+private int bruteForce(int[] g, int[] s) {
+    boolean[] used = new boolean[s.length];
+    int count = 0;
+
+    for (int i = 0; i < g.length; i++) {
+        int best = -1;
+        for (int j = 0; j < s.length; j++) {
+            // smallest unused cookie that still fits child i
+            if (!used[j] && g[i] <= s[j]
+                    && (best == -1 || s[best] > s[j])) {
+                best = j;
+            }
+        }
+        if (best != -1) {
+            used[best] = true;
+            count++;
+        }
+    }
+    return count;
 }
 ```
 
@@ -101,7 +164,7 @@ Rescans every cookie per child. Sorting removes the rescan.
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 2 — Sort + Two Pointers</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 2 — Sort + Two Pointers</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
 
 ```java
 class Solution {
@@ -113,7 +176,9 @@ class Solution {
         int i = 0, j = 0;
         while (i < g.length && j < s.length) {
             // fed -> next child
-            if (s[j] >= g[i]) i++;
+            if (s[j] >= g[i]) {
+                i++;
+            }
             // cookie spent either way
             j++;
         }
@@ -127,16 +192,20 @@ class Solution {
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4003 · Shortest Job First (SJF) -->
 <details name="greedy">
-<summary><b>4003 · Shortest Job First(SJF)</b></summary>
+<summary><b>4003 · Shortest Job First (SJF)</b></summary>
+
+---
 
 🔗 https://www.geeksforgeeks.org/problems/shortest-job-first/1
 
 All processes arrive at time 0; return the **average waiting time** (floor).
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -149,7 +218,7 @@ All processes arrive at time 0; return the **average waiting time** (floor).
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
 
 ```
 bt = [4,3,7,1,2] -> sorted [1,2,3,4,7]
@@ -168,7 +237,7 @@ total = 20  ->  20 / 5 = 4
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Sort burst times ascending.
 2. Each job's wait = sum of all bursts before it.
@@ -180,7 +249,7 @@ Why ascending: `bt[i]` is paid by the `n-1-i` jobs behind it — small numbers d
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Sort + Running Wait</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Sort + Running Wait</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
 
 ```java
 static int solve(int bt[]) {
@@ -198,14 +267,16 @@ static int solve(int bt[]) {
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 2 — Sort + Weighted Sum</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 2 — Sort + Weighted Sum</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
 
 ```java
 static int solve(int bt[]) {
     Arrays.sort(bt);
     int n = bt.length, total = 0;
     // burst paid by everyone after it
-    for (int i = 0; i < n; i++) total += bt[i] * (n - 1 - i);
+    for (int i = 0; i < n; i++) {
+        total += bt[i] * (n - 1 - i);
+    }
     return total / n;
 }
 ```
@@ -217,16 +288,20 @@ Same answer, states the "small numbers get the big multiplier" idea directly. Wa
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4004 · Jump Game I -->
 <details name="greedy">
 <summary><b>4004 · Jump Game I</b></summary>
+
+---
 
 🔗 https://leetcode.com/problems/jump-game/
 
 `nums[i]` is the **max** jump length from `i` — can you reach the last index?
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -240,7 +315,7 @@ Same answer, states the "small numbers get the big multiplier" idea directly. Wa
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
 
 ```
 nums = [2, 3, 1, 1, 4]
@@ -263,7 +338,7 @@ f  3  3  3  3
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Track the farthest index reachable so far.
 2. Sweep left to right.
@@ -276,14 +351,16 @@ Backward variant: hold the leftmost index known to reach the end, walk right-to-
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Forward Greedy (farthest reach)</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Forward Greedy (farthest reach)</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
 
 ```java
 public boolean canJump(int[] nums) {
     int farthest = 0;
     for (int i = 0; i < nums.length; i++) {
         // wall — can't even stand here
-        if (i > farthest) return false;
+        if (i > farthest) {
+            return false;
+        }
         farthest = Math.max(farthest, i + nums[i]);
     }
     // survived the sweep
@@ -294,14 +371,17 @@ public boolean canJump(int[] nums) {
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 2 — Backward Greedy (shrinking goal)</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 2 — Backward Greedy (shrinking goal)</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
 
 ```java
 public boolean canJump(int[] nums) {
     int goal = nums.length - 1;
-    for (int i = nums.length - 2; i >= 0; i--)
+    for (int i = nums.length - 2; i >= 0; i--) {
         // i can reach goal -> i is the new goal
-        if (i + nums[i] >= goal) goal = i;
+    }
+    if (i + nums[i] >= goal) {
+        goal = i;
+    }
     return goal == 0;
 }
 ```
@@ -311,16 +391,20 @@ public boolean canJump(int[] nums) {
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4006 · Job Sequencing Problem -->
 <details name="greedy">
 <summary><b>4006 · Job Sequencing Problem</b></summary>
+
+---
 
 🔗 https://www.geeksforgeeks.org/problems/job-sequencing-problem-1587115620/1
 
 Each job takes 1 unit of time and must finish by its deadline; maximise total profit.
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -334,7 +418,7 @@ Each job takes 1 unit of time and must finish by its deadline; maximise total pr
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
 
 ```
 jobs (id, deadline, profit)
@@ -359,7 +443,7 @@ count = 2, profit = 60
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Create Job objects (deadline, profit).
 2. Sort by profit descending — profit decides *which* jobs run, deadline decides *where* they sit.
@@ -371,7 +455,7 @@ count = 2, profit = 60
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Sort + Backward Slot Scan</b> &nbsp; T: O(n log n + n·maxD) &nbsp; S: O(maxD)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Sort + Backward Slot Scan</b> &nbsp; T: O(n log n + n·maxD) &nbsp; S: O(maxD)</summary>
 
 ```java
 // jobs[i] = {deadline, profit}
@@ -380,17 +464,21 @@ static int[] jobSequencing(int[][] jobs) {
     Arrays.sort(jobs, (a, b) -> b[1] - a[1]);
 
     int maxD = 0;
-    for (int[] j : jobs) maxD = Math.max(maxD, j[0]);
+    for (int[] j : jobs) {
+        maxD = Math.max(maxD, j[0]);
+    }
     // slot[0] unused — 1-indexed
     boolean[] slot = new boolean[maxD + 1];
 
     int count = 0, profit = 0;
-    for (int[] j : jobs)
+    for (int[] j : jobs) {
         // LATEST free slot first
-        for (int t = j[0]; t >= 1; t--)
-            if (!slot[t]) {
-                slot[t] = true; count++; profit += j[1]; break;
-            }
+    }
+    for (int t = j[0]; t >= 1; t--) {
+        if (!slot[t]) {
+            slot[t] = true; count++; profit += j[1]; break;
+        }
+    }
 
     return new int[]{count, profit};
 }
@@ -399,7 +487,7 @@ static int[] jobSequencing(int[][] jobs) {
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 2 — DSU</b> &nbsp; T: O(n log n) &nbsp; S: O(maxD) &nbsp; ⏳ not studied yet</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 2 — DSU</b> &nbsp; T: O(n log n) &nbsp; S: O(maxD) &nbsp; ⏳ not studied yet</summary>
 
 Deliberately left unwritten — see Remarks. Same sort, same greedy; only the "find latest free slot ≤ d" step is replaced by a Disjoint Set Union `find` with path compression, so the inner `for t--` loop disappears.
 
@@ -410,16 +498,20 @@ Write this section once DSU is covered.
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4007 · Maximum Meetings in One Room -->
 <details name="greedy">
 <summary><b>4007 · Maximum Meetings in One Room</b></summary>
+
+---
 
 🔗 http://geeksforgeeks.org/problems/maximum-meetings-in-one-room/1
 
 One room, N meetings `(start, end)` — attend the most meetings and report which ones.
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -434,7 +526,7 @@ One room, N meetings `(start, end)` — attend the most meetings and report whic
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
 
 ```
 meeting #   1  2  3  4  5  6
@@ -464,7 +556,7 @@ sorted by end:
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Create Meeting objects carrying `start`, `end` and the original 1-based position.
 2. Sort by finish time ascending, ties broken by smaller position.
@@ -476,27 +568,29 @@ Why earliest-finish wins: whichever meeting you take, the only thing that matter
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Sort by End + Greedy Pick</b> &nbsp; T: O(n log n) &nbsp; S: O(n)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Sort by End + Greedy Pick</b> &nbsp; T: O(n log n) &nbsp; S: O(n)</summary>
 
 ```java
 static ArrayList<Integer> maxMeetings(int n, int start[], int end[]) {
     // {end, start, index}
     int[][] m = new int[n][3];
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         m[i] = new int[]{end[i], start[i], i + 1};
+    }
 
     // end ASC, then index
     Arrays.sort(m, (a, b) ->
-        a[0] != b[0] ? a[0] - b[0] : a[2] - b[2]);
+            a[0] != b[0] ? a[0] - b[0] : a[2] - b[2]);
 
     ArrayList<Integer> ans = new ArrayList<>();
     int lastEnd = -1;
-    for (int[] mt : m)
+    for (int[] mt : m) {
         // strictly greater
-        if (mt[1] > lastEnd) {
-            ans.add(mt[2]);
-            lastEnd = mt[0];
-        }
+    }
+    if (mt[1] > lastEnd) {
+        ans.add(mt[2]);
+        lastEnd = mt[0];
+    }
 
     Collections.sort(ans);
     return ans;
@@ -508,16 +602,20 @@ static ArrayList<Integer> maxMeetings(int n, int start[], int end[]) {
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4008 · Non-overlapping Intervals -->
 <details name="greedy">
 <summary><b>4008 · Non-overlapping Intervals</b></summary>
+
+---
 
 🔗 https://leetcode.com/problems/non-overlapping-intervals/
 
 Remove the fewest intervals so none of the rest overlap.
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -530,7 +628,7 @@ Remove the fewest intervals so none of the rest overlap.
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
 
 ```
 [[1,2],[2,3],[3,4],[1,3]]
@@ -562,7 +660,7 @@ by end  : keep [2,3],[4,5]  -> 1 removal ✅
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Sort intervals by end time ascending.
 2. Keep a `lastEnd` cursor, starting at negative infinity.
@@ -574,7 +672,7 @@ Fewest removals and most keeps are the same question asked backwards, and "most 
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Brute Force (keep or remove)</b> &nbsp; T: O(2ⁿ) &nbsp; S: O(n)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Brute Force (keep or remove)</b> &nbsp; T: O(2ⁿ) &nbsp; S: O(n)</summary>
 
 ```java
 public int eraseOverlapIntervals(int[][] intervals) {
@@ -585,11 +683,14 @@ public int eraseOverlapIntervals(int[][] intervals) {
 
 // max intervals KEPT
 private int solve(int[][] iv, int i, int prev) {
-    if (i == iv.length) return 0;
+    if (i == iv.length) {
+        return 0;
+    }
     int skip = solve(iv, i + 1, prev);
     int take = 0;
-    if (prev == -1 || iv[i][0] >= iv[prev][1])
+    if (prev == -1 || iv[i][0] >= iv[prev][1]) {
         take = 1 + solve(iv, i + 1, i);
+    }
     return Math.max(take, skip);
 }
 ```
@@ -599,12 +700,14 @@ Every interval is kept or dropped — the full `2ⁿ` decision tree.
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 2 — DP (longest compatible chain)</b> &nbsp; T: O(n²) &nbsp; S: O(n)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 2 — DP (longest compatible chain)</b> &nbsp; T: O(n²) &nbsp; S: O(n)</summary>
 
 ```java
 public int eraseOverlapIntervals(int[][] intervals) {
     int n = intervals.length;
-    if (n == 0) return 0;
+    if (n == 0) {
+        return 0;
+    }
     Arrays.sort(intervals,
             (a, b) -> Integer.compare(a[0], b[0]));
 
@@ -613,9 +716,11 @@ public int eraseOverlapIntervals(int[][] intervals) {
     Arrays.fill(dp, 1);
     int best = 1;
     for (int i = 1; i < n; i++) {
-        for (int j = 0; j < i; j++)
-            if (intervals[j][1] <= intervals[i][0])
+        for (int j = 0; j < i; j++) {
+            if (intervals[j][1] <= intervals[i][0]) {
                 dp[i] = Math.max(dp[i], dp[j] + 1);
+            }
+        }
         best = Math.max(best, dp[i]);
     }
     return n - best;
@@ -627,7 +732,7 @@ Literally Longest Increasing Subsequence with "non-overlapping" as the compariso
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 3 — Sort by End + Count Keeps</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 3 — Sort by End + Count Keeps</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
 
 ```java
 public int eraseOverlapIntervals(int[][] intervals) {
@@ -636,9 +741,13 @@ public int eraseOverlapIntervals(int[][] intervals) {
             (a, b) -> Integer.compare(a[1], b[1]));
 
     int kept = 0, lastEnd = Integer.MIN_VALUE;
-    for (int[] it : intervals)
+    for (int[] it : intervals) {
         // >= : touching is OK
-        if (it[0] >= lastEnd) { kept++; lastEnd = it[1]; }
+    }
+    if (it[0] >= lastEnd) {
+        kept++;
+        lastEnd = it[1];
+    }
 
     return intervals.length - kept;
 }
@@ -651,16 +760,20 @@ public int eraseOverlapIntervals(int[][] intervals) {
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4009 · Insert Interval -->
 <details name="greedy">
 <summary><b>4009 · Insert Interval</b></summary>
+
+---
 
 🔗 https://leetcode.com/problems/insert-interval/
 
 Insert one interval into an already-sorted non-overlapping list, merging what it touches.
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -674,7 +787,7 @@ Insert one interval into an already-sorted non-overlapping list, merging what it
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
 
 ```
 intervals:
@@ -701,7 +814,7 @@ result = [1,2] [3,10] [12,16]
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Emit every interval that ends strictly before the new one starts — untouched.
 2. While the next interval starts at or before the new one's end, absorb it by widening `s` and `e`.
@@ -713,7 +826,7 @@ Sorted input means everything that overlaps the new interval is one contiguous b
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Append, Sort, Merge All</b> &nbsp; T: O(n log n) &nbsp; S: O(n)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Append, Sort, Merge All</b> &nbsp; T: O(n log n) &nbsp; S: O(n)</summary>
 
 ```java
 public int[][] insert(int[][] intervals, int[] newInterval) {
@@ -724,12 +837,15 @@ public int[][] insert(int[][] intervals, int[] newInterval) {
     List<int[]> res = new ArrayList<>();
     for (int[] it : all) {
         int[] last = res.isEmpty()
-                   ? null : res.get(res.size() - 1);
+                ? null : res.get(res.size() - 1);
         // overlap -> widen
-        if (last != null && it[0] <= last[1])
+        if (last != null && it[0] <= last[1]) {
             last[1] = Math.max(last[1], it[1]);
+        }
         // copy, don't alias
-        else res.add(new int[]{it[0], it[1]});
+        else {
+            res.add(new int[]{it[0], it[1]});
+        }
     }
     return res.toArray(new int[0][]);
 }
@@ -740,7 +856,7 @@ Throws away the fact that the input is already sorted, and pays `O(n log n)` to 
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 2 — Three-Phase Linear Scan</b> &nbsp; T: O(n) &nbsp; S: O(n)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 2 — Three-Phase Linear Scan</b> &nbsp; T: O(n) &nbsp; S: O(n)</summary>
 
 ```java
 public int[][] insert(int[][] intervals, int[] newInterval) {
@@ -748,8 +864,9 @@ public int[][] insert(int[][] intervals, int[] newInterval) {
     int i = 0, n = intervals.length;
 
     // strictly before
-    while (i < n && intervals[i][1] < newInterval[0])
+    while (i < n && intervals[i][1] < newInterval[0]) {
         res.add(intervals[i++]);
+    }
 
     int s = newInterval[0], e = newInterval[1];
     // touching merges
@@ -760,7 +877,9 @@ public int[][] insert(int[][] intervals, int[] newInterval) {
     }
     res.add(new int[]{s, e});
 
-    while (i < n) res.add(intervals[i++]);
+    while (i < n) {
+        res.add(intervals[i++]);
+    }
 
     return res.toArray(new int[0][]);
 }
@@ -771,16 +890,20 @@ public int[][] insert(int[][] intervals, int[] newInterval) {
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4010 · Minimum Platforms -->
 <details name="greedy">
 <summary><b>4010 · Minimum Platforms</b></summary>
+
+---
 
 🔗 https://www.geeksforgeeks.org/problems/minimum-platforms-1587115620/1
 
 Fewest railway platforms so no train ever waits.
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -794,7 +917,7 @@ Fewest railway platforms so no train ever waits.
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
 
 ```
 arr = [900, 940, 950,1100,1500,1800]
@@ -822,7 +945,7 @@ answer = 3
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Sort arrivals and departures as two independent sorted lists.
 2. Two pointers walk them in merged time order.
@@ -834,7 +957,7 @@ Forget trains, watch the clock. Sweeping through time, every arrival adds one oc
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Brute Force (count overlaps per train)</b> &nbsp; T: O(n²) &nbsp; S: O(1)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Brute Force (count overlaps per train)</b> &nbsp; T: O(n²) &nbsp; S: O(1)</summary>
 
 ```java
 static int findPlatform(int arr[], int dep[]) {
@@ -842,10 +965,11 @@ static int findPlatform(int arr[], int dep[]) {
     for (int i = 0; i < n; i++) {
         // train i itself
         int count = 1;
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < n; j++) {
             // j still on a platform
-            if (j != i && arr[j] <= arr[i]
-                       && dep[j] >= arr[i]) count++;
+        }
+        if (j != i && arr[j] <= arr[i]
+                && dep[j] >= arr[i]) count++;
         max = Math.max(max, count);
     }
     return max;
@@ -857,7 +981,7 @@ The peak can only happen **at some arrival**, so checking every arrival instant 
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 2 — Sort Both + Two-Pointer Sweep</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 2 — Sort Both + Two-Pointer Sweep</b> &nbsp; T: O(n log n) &nbsp; S: O(1)</summary>
 
 ```java
 static int findPlatform(int arr[], int dep[]) {
@@ -882,7 +1006,7 @@ static int findPlatform(int arr[], int dep[]) {
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 3 — Difference Array (no sort)</b> &nbsp; T: O(n + T) &nbsp; S: O(T)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 3 — Difference Array (no sort)</b> &nbsp; T: O(n + T) &nbsp; S: O(T)</summary>
 
 ```java
 static int findPlatform(int arr[], int dep[]) {
@@ -909,16 +1033,20 @@ Beats the sort when `n` is large, but only because the clock is bounded. Useless
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4011 · Valid Parenthesis String -->
 <details name="greedy">
 <summary><b>4011 · Valid Parenthesis String</b></summary>
+
+---
 
 🔗 https://leetcode.com/problems/valid-parenthesis-string/
 
 `*` is a wildcard for `(`, `)` or empty — can the string be made valid?
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -932,7 +1060,7 @@ Beats the sort when `n` is large, but only because the clock is bounded. Useless
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
 
 ```
 s = "(*))"
@@ -960,7 +1088,7 @@ low == 0  ->  true ✅
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Keep two counters — `low` (fewest opens still possible) and `high` (most opens still possible).
 2. `(` raises both, `)` lowers both, `*` lowers `low` and raises `high`.
@@ -973,7 +1101,7 @@ Every `*` forks the string into three futures, so brute force is `3^n`. But thos
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Brute Force (try all three)</b> &nbsp; T: O(3ⁿ) &nbsp; S: O(n)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Brute Force (try all three)</b> &nbsp; T: O(3ⁿ) &nbsp; S: O(n)</summary>
 
 ```java
 public boolean checkValidString(String s) {
@@ -982,25 +1110,31 @@ public boolean checkValidString(String s) {
 
 private boolean solve(String s, int i, int open) {
     // prune: already impossible
-    if (open < 0) return false;
-    if (i == s.length()) return open == 0;
+    if (open < 0) {
+        return false;
+    }
+    if (i == s.length()) {
+        return open == 0;
+    }
 
     char c = s.charAt(i);
-    if (c == '(') return solve(s, i + 1, open + 1);
-    if (c == ')') return solve(s, i + 1, open - 1);
-    // '*' as '('
+    if (c == '(') {
+        return solve(s, i + 1, open + 1);
+    }
+    if (c == ')') {
+        return solve(s, i + 1, open - 1);
+    }
+    // '*' as '(' , as ')' , or as empty
     return solve(s, i + 1, open + 1)
-        // '*' as ')'
-        || solve(s, i + 1, open - 1)
-        // '*' as empty
-        || solve(s, i + 1, open);
+            || solve(s, i + 1, open - 1)
+            || solve(s, i + 1, open);
 }
 ```
 
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 2 — Memoization</b> &nbsp; T: O(n²) &nbsp; S: O(n²)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 2 — Memoization</b> &nbsp; T: O(n²) &nbsp; S: O(n²)</summary>
 
 ```java
 public boolean checkValidString(String s) {
@@ -1008,17 +1142,27 @@ public boolean checkValidString(String s) {
 }
 
 private boolean solve(String s, int i, int open, Boolean[][] memo) {
-    if (open < 0) return false;
-    if (i == s.length()) return open == 0;
-    if (memo[i][open] != null) return memo[i][open];
+    if (open < 0) {
+        return false;
+    }
+    if (i == s.length()) {
+        return open == 0;
+    }
+    if (memo[i][open] != null) {
+        return memo[i][open];
+    }
 
     char c = s.charAt(i);
     boolean ok;
-    if (c == '(')      ok = solve(s, i + 1, open + 1, memo);
-    else if (c == ')') ok = solve(s, i + 1, open - 1, memo);
-    else ok = solve(s, i + 1, open + 1, memo)
-           || solve(s, i + 1, open - 1, memo)
-           || solve(s, i + 1, open, memo);
+    if (c == '(') {
+        ok = solve(s, i + 1, open + 1, memo);
+    } else if (c == ')') {
+        ok = solve(s, i + 1, open - 1, memo);
+    } else {
+        ok = solve(s, i + 1, open + 1, memo)
+                || solve(s, i + 1, open - 1, memo)
+                || solve(s, i + 1, open, memo);
+    }
 
     return memo[i][open] = ok;
 }
@@ -1029,7 +1173,7 @@ State is `(index, open)` — `open` never exceeds `n`, so the table is `n × (n+
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 3 — Two Stacks (indices)</b> &nbsp; T: O(n) &nbsp; S: O(n)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 3 — Two Stacks (indices)</b> &nbsp; T: O(n) &nbsp; S: O(n)</summary>
 
 ```java
 public boolean checkValidString(String s) {
@@ -1038,17 +1182,25 @@ public boolean checkValidString(String s) {
 
     for (int i = 0; i < s.length(); i++) {
         char c = s.charAt(i);
-        if (c == '(') open.push(i);
-        else if (c == '*') star.push(i);
-        else {
-            if (!open.isEmpty()) open.pop();
-            else if (!star.isEmpty()) star.pop();
-            else return false;
+        if (c == '(') {
+            open.push(i);
+        } else if (c == '*') {
+            star.push(i);
+        } else {
+            if (!open.isEmpty()) {
+                open.pop();
+            } else if (!star.isEmpty()) {
+                star.pop();
+            } else {
+                return false;
+            }
         }
     }
     while (!open.isEmpty() && !star.isEmpty()) {
         // '*' sits LEFT of '(' — cannot close it
-        if (open.peek() > star.peek()) return false;
+        if (open.peek() > star.peek()) {
+            return false;
+        }
         open.pop();
         star.pop();
     }
@@ -1061,7 +1213,7 @@ Store **indices, not counts** — the leftover `*` must appear *after* the lefto
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 4 — Two-Counter Range Sweep</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 4 — Two-Counter Range Sweep</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
 
 ```java
 public boolean checkValidString(String s) {
@@ -1069,13 +1221,22 @@ public boolean checkValidString(String s) {
     int low = 0, high = 0;
 
     for (char c : s.toCharArray()) {
-        if      (c == '(') { low++; high++; }
-        else if (c == ')') { low--; high--; }
-        // '*' widens both ways
-        else               { low--; high++; }
+        if (c == '(') {
+            low++;
+            high++;
+        } else if (c == ')') {
+            low--;
+            high--;
+        } else {
+            // '*' widens both ways
+            low--;
+            high++;
+        }
 
         // unfixable, stop now
-        if (high < 0) return false;
+        if (high < 0) {
+            return false;
+        }
         // never fewer than zero opens
         low = Math.max(low, 0);
     }
@@ -1088,16 +1249,20 @@ public boolean checkValidString(String s) {
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4012 · Candy -->
 <details name="greedy">
 <summary><b>4012 · Candy</b></summary>
+
+---
 
 🔗 https://leetcode.com/problems/candy/
 
 Every child gets ≥1 candy, and a higher-rated child gets more than each neighbour — minimise the total.
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -1111,7 +1276,7 @@ Every child gets ≥1 candy, and a higher-rated child gets more than each neighb
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
 
 ```
 ratings = [1, 0, 2]
@@ -1137,7 +1302,7 @@ total = 13
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Give every child 1 candy.
 2. Sweep left to right — if a child out-rates the one on their left, give them one more than that neighbour.
@@ -1149,7 +1314,7 @@ Each child has two independent obligations, and no single direction can see both
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Two Separate Arrays</b> &nbsp; T: O(n) &nbsp; S: O(2n)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Two Separate Arrays</b> &nbsp; T: O(n) &nbsp; S: O(2n)</summary>
 
 ```java
 public int candy(int[] ratings) {
@@ -1158,17 +1323,22 @@ public int candy(int[] ratings) {
     Arrays.fill(left, 1);
     Arrays.fill(right, 1);
 
-    for (int i = 1; i < n; i++)
-        if (ratings[i] > ratings[i - 1])
+    for (int i = 1; i < n; i++) {
+        if (ratings[i] > ratings[i - 1]) {
             left[i] = left[i - 1] + 1;
-    for (int i = n - 2; i >= 0; i--)
-        if (ratings[i] > ratings[i + 1])
+        }
+    }
+    for (int i = n - 2; i >= 0; i--) {
+        if (ratings[i] > ratings[i + 1]) {
             right[i] = right[i + 1] + 1;
+        }
+    }
 
     int sum = 0;
     // satisfy both rules
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         sum += Math.max(left[i], right[i]);
+    }
     return sum;
 }
 ```
@@ -1178,7 +1348,7 @@ Clearest version — each rule owns its array, `max` merges them at the end. Cod
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 2 — Two-Pass Sweep (one array)</b> &nbsp; T: O(n) &nbsp; S: O(n)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 2 — Two-Pass Sweep (one array)</b> &nbsp; T: O(n) &nbsp; S: O(n)</summary>
 
 ```java
 public int candy(int[] ratings) {
@@ -1187,17 +1357,24 @@ public int candy(int[] ratings) {
     Arrays.fill(c, 1);
 
     // left neighbour rule
-    for (int i = 1; i < n; i++)
-        if (ratings[i] > ratings[i - 1]) c[i] = c[i - 1] + 1;
+    for (int i = 1; i < n; i++) {
+        if (ratings[i] > ratings[i - 1]) {
+            c[i] = c[i - 1] + 1;
+        }
+    }
 
     // right neighbour rule
-    for (int i = n - 2; i >= 0; i--)
+    for (int i = n - 2; i >= 0; i--) {
         // max, NOT assign
-        if (ratings[i] > ratings[i + 1])
-            c[i] = Math.max(c[i], c[i + 1] + 1);
+    }
+    if (ratings[i] > ratings[i + 1]) {
+        c[i] = Math.max(c[i], c[i + 1] + 1);
+    }
 
     int sum = 0;
-    for (int x : c) sum += x;
+    for (int x : c) {
+        sum += x;
+    }
     return sum;
 }
 ```
@@ -1205,7 +1382,7 @@ public int candy(int[] ratings) {
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 3 — Slope Counting (constant space)</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 3 — Slope Counting (constant space)</b> &nbsp; T: O(n) &nbsp; S: O(1)</summary>
 
 ```java
 public int candy(int[] ratings) {
@@ -1230,7 +1407,9 @@ public int candy(int[] ratings) {
         }
 
         // valley longer than the climb -> raise the peak
-        if (down > peak) sum += down - peak;
+        if (down > peak) {
+            sum += down - peak;
+        }
     }
     return sum;
 }
@@ -1245,16 +1424,20 @@ Fiddly and rarely required. Know Code 2 cold; keep this one as the "can you do O
 </details>
 
 ---
+<!-- #endregion -->
 
+<!-- #region 4013 · Fractional Knapsack -->
 <details name="greedy">
 <summary><b>4013 · Fractional Knapsack</b></summary>
+
+---
 
 🔗 https://www.geeksforgeeks.org/problems/fractional-knapsack-1587115620/1
 
 Fill a bag of capacity `W` for maximum value — items may be broken into fractions.
 
 <details>
-<summary><b>📌 Remarks</b></summary>
+<summary>&nbsp;&nbsp;<b>📌 Remarks</b></summary>
 
 **Revision:** R1 ` ` · R2 ` ` · R3 ` `
 
@@ -1269,7 +1452,7 @@ Fill a bag of capacity `W` for maximum value — items may be broken into fracti
 </details>
 
 <details>
-<summary><b>🌳 Examples</b></summary>
+<summary>&nbsp;&nbsp;<b>🌳 Examples</b></summary>
 
 ```
 W = 50
@@ -1305,7 +1488,7 @@ whole item (7,6) = 7 was better ✅
 </details>
 
 <details>
-<summary><b>💡 Intuition</b></summary>
+<summary>&nbsp;&nbsp;<b>💡 Intuition</b></summary>
 
 1. Compute each item's value-per-unit-weight.
 2. Sort items by that ratio, highest first.
@@ -1317,13 +1500,15 @@ Capacity is the scarce resource, so buy the densest value per kilo first. Fracti
 </details>
 
 <details>
-<summary><b>👨‍💻 Code 1 — Sort by Ratio + Fill</b> &nbsp; T: O(n log n) &nbsp; S: O(n)</summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Code 1 — Sort by Ratio + Fill</b> &nbsp; T: O(n log n) &nbsp; S: O(n)</summary>
 
 ```java
 static double fractionalKnapsack(int[] val, int[] wt, int capacity) {
     int n = val.length;
     Integer[] idx = new Integer[n];
-    for (int i = 0; i < n; i++) idx[i] = i;
+    for (int i = 0; i < n; i++) {
+        idx[i] = i;
+    }
 
     // ratio DESC — Double.compare, never (int)(r2 - r1)
     Arrays.sort(idx, (a, b) -> Double.compare(
@@ -1337,8 +1522,8 @@ static double fractionalKnapsack(int[] val, int[] wt, int capacity) {
         if (wt[i] <= remaining) {
             total += val[i];
             remaining -= wt[i];
-        // fraction, then done
         } else {
+            // fraction of the last item, then done
             total += (double) val[i] * remaining / wt[i];
             break;
         }
@@ -1350,7 +1535,7 @@ static double fractionalKnapsack(int[] val, int[] wt, int capacity) {
 </details>
 
 <details>
-<summary><b>👨‍💻 Why there is no second approach</b></summary>
+<summary>&nbsp;&nbsp;<b>👨‍💻 Why there is no second approach</b></summary>
 
 There is no meaningful brute force here. "Try every subset" is the **0/1** problem, and 0/1 is a different problem with a different answer — it cannot be fractional knapsack's brute force.
 
@@ -1363,3 +1548,4 @@ The approach ladder you actually want here is the **contrast**: fractional → g
 </details>
 
 ---
+<!-- #endregion -->
